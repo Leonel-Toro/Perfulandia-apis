@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="eureka-server" />
+        <module name="api-gateway-spring-boot" />
+      </profile>
+      <profile name="Annotation profile for ventas-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="soporte-api" />
+        <module name="ventas-api" />
+        <module name="productos-api" />
+        <module name="envios-api" />
+        <module name="clientes-api" />
+        <module name="cupones-api" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="personas-api-spring-boot" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api-gateway-spring-boot" options="-parameters" />
+      <module name="clientes-api" options="-parameters" />
+      <module name="cupones-api" options="-parameters" />
+      <module name="envios-api" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="personas-api-spring-boot" options="-parameters" />
+      <module name="productos-api" options="-parameters" />
+      <module name="soporte-api" options="-parameters" />
+      <module name="ventas-api" options="-parameters" />
+    </option>
+  </component>
+</project>
