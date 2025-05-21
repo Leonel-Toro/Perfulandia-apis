@@ -1,6 +1,5 @@
 package com.clientes_api.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
 
@@ -22,8 +21,6 @@ public class Cliente {
     private String telefono;
 
     private String direccion;
-    @OneToMany(mappedBy = "cliente")
-    private Venta ventaCliente;
 
     @OneToMany(mappedBy = "cliente")
     private TicketSoporte ticketSoporte;

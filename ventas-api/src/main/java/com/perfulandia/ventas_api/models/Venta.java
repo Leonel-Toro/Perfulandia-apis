@@ -1,4 +1,4 @@
-package com.clientes_api.models;
+package com.perfulandia.ventas_api.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "ventas")
@@ -15,13 +16,10 @@ public class Venta {
     @Id
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
-
     private Long idVendedor;
-    private LocalDateTime fecha;
-    private BigDecimal total;
+    private Date fecha;
+    private Integer total;
+    private Long idCliente;
 
     public Venta() {
     }
@@ -34,14 +32,6 @@ public class Venta {
         this.id = id;
     }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
     public Long getIdVendedor() {
         return idVendedor;
     }
@@ -50,19 +40,27 @@ public class Venta {
         this.idVendedor = idVendedor;
     }
 
-    public LocalDateTime getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDateTime fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
-    public BigDecimal getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
+    public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    public Long getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
     }
 }

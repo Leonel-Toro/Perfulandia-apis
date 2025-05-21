@@ -1,7 +1,6 @@
-package com.clientes_api.repository;
+package com.perfulandia.ventas_api.repository;
 
 import com.clientes_api.models.Venta;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

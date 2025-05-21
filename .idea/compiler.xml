@@ -10,7 +10,7 @@
         <module name="eureka-server" />
         <module name="api-gateway-spring-boot" />
       </profile>
-      <profile name="Annotation profile for ventas-api" enabled="true">
+      <profile name="Annotation profile for soporte-api" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -18,8 +18,8 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="soporte-api" />
-        <module name="ventas-api" />
         <module name="productos-api" />
+        <module name="ventas-api" />
         <module name="envios-api" />
         <module name="clientes-api" />
         <module name="cupones-api" />

@@ -1,0 +1,18 @@
+spring:
+    application:
+        name: ventas-api
+
+datasource:
+    url: jdbc:mariadb://localhost:3306/perfulandia
+    username: root
+    password:
+    driver-class-name: org.mariadb.jdbc.Driver
+
+jpa:
+    hibernate:
+        ddl-auto: update
+    show-sql: true
+
+server:
+    port: 8083
+
