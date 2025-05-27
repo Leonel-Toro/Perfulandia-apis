@@ -1,4 +1,4 @@
-package com.clientes_api.security;
+package com.perfulandia.ventas_api.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -20,6 +20,7 @@
         <option value="$PROJECT_DIR$/soporte-api/pom.xml" />
         <option value="$PROJECT_DIR$/ventas-api/pom.xml" />
         <option value="$PROJECT_DIR$/api-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/usuarios-api/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

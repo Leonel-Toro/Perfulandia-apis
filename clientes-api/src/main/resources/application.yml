@@ -1,18 +1,17 @@
 spring:
-    application:
-        name: clientes-api
+  application:
+    name: clientes-api
 
-datasource:
+  datasource:
     url: jdbc:mariadb://localhost:3306/perfulandia
     username: root
     password:
     driver-class-name: org.mariadb.jdbc.Driver
 
-jpa:
+  jpa:
     hibernate:
-        ddl-auto: update
+      ddl-auto: update
     show-sql: true
 
 server:
-    port: 8082
-
+  port: 8082

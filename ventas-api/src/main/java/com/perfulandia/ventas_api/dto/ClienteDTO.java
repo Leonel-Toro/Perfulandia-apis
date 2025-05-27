@@ -1,29 +1,13 @@
-package com.clientes_api.models;
+package com.perfulandia.ventas_api.dto;
 
-import jakarta.persistence.*;
-import org.hibernate.validator.constraints.NotBlank;
-
-@Entity
-@Table(name="clientes")
-public class Cliente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ClienteDTO {
     private Long id;
-
-    @Column(nullable = false, length = 45)
     private String nombre;
-
-    @Column(nullable = false, length = 45)
     private String apellido;
-
+    private String email;
     private String rut;
-
     private String telefono;
-
     private String direccion;
-
-    public Cliente() {
-    }
 
     public Long getId() {
         return id;
@@ -47,6 +31,14 @@ public class Cliente {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getRut() {

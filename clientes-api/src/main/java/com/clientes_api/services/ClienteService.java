@@ -22,15 +22,15 @@ public class ClienteService {
         return cliente.orElse(null);
     }
 
-    public Cliente add(Cliente Cliente) {
-        return clienteRepository.save(Cliente);
+    public Cliente save(Cliente cliente) {
+        return clienteRepository.save(cliente);
     }
 
    
-    public Cliente update(Integer id, Cliente Cliente) {
-        if (clienteRepository.existsById(id)) {
-            Cliente.setId(id); 
-            return clienteRepository.save(Cliente);
+    public Cliente update(Long id, Cliente cliente) {
+        if (clienteRepository.existsById(id.intValue())) {
+            cliente.setId(id);
+            return clienteRepository.save(cliente);
         }
         return null; // No se encontró la Cliente
     }
