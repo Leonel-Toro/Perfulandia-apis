@@ -1,15 +1,14 @@
 package com.clientes_api.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name="clientes")
 public class Cliente {
-    @Id // Clave primaria
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Autoincremental (MySQL)
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, length = 45)
     private String nombre;
@@ -22,20 +21,15 @@ public class Cliente {
     private String telefono;
 
     private String direccion;
-    @OneToMany(mappedBy = "cliente")
-    private Venta ventaCliente;
-
-    @OneToMany(mappedBy = "cliente")
-    private TicketSoporte ticketSoporte;
 
     public Cliente() {
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

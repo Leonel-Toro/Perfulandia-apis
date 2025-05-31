@@ -3,7 +3,7 @@ package com.perfulandia.ventas_api;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages ={"com.perfulandia.ventas_api"})
 public class VentasApiApplication {
 
 	public static void main(String[] args) {
