@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
-        <module name="eureka-server" />
       </profile>
       <profile name="Annotation profile for ventas-api" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -18,13 +17,17 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="soporte-api" />
-        <module name="ventas-api" />
-        <module name="productos-api" />
         <module name="envios-api" />
         <module name="clientes-api" />
+        <module name="usuarios-api" />
+        <module name="ventas-api" />
+        <module name="productos-api" />
         <module name="cupones-api" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="eureka-server" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -36,6 +39,7 @@
       <module name="personas-api-spring-boot" options="-parameters" />
       <module name="productos-api" options="-parameters" />
       <module name="soporte-api" options="-parameters" />
+      <module name="usuarios-api" options="-parameters" />
       <module name="ventas-api" options="-parameters" />
     </option>
   </component>
