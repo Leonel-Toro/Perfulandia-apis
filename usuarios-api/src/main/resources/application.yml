@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ventas-api
+    name: usuarios-api
 
   datasource:
     url: jdbc:mariadb://localhost:3306/perfulandia
@@ -14,4 +14,4 @@ spring:
     show-sql: true
 
 server:
-  port: 8083
+  port: 8081

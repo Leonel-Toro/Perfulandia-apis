@@ -1,18 +1,17 @@
 spring:
-    application:
-        name: soporte-api
+  application:
+    name: soporte-api
 
 datasource:
-    url: jdbc:mariadb://localhost:3306/perfulandia
-    username: root
-    password:
-    driver-class-name: org.mariadb.jdbc.Driver
+  url: jdbc:mariadb://localhost:3306/perfulandia
+  username: root
+  password:
+  driver-class-name: org.mariadb.jdbc.Driver
 
 jpa:
-    hibernate:
-        ddl-auto: update
-    show-sql: true
+  hibernate:
+    ddl-auto: update
+  show-sql: true
 
 server:
-    port: 8085
-
+  port: 8085

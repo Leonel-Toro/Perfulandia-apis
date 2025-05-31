@@ -1,9 +1,9 @@
-package com.perfulandia.ventas_api.security;
+package com.clientes_api.security;
 
+import com.clientes_api.clients.UsuarioRestClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
-
 
 @Configuration
 public class RestClientConfig {

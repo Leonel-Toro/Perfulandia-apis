@@ -14,8 +14,8 @@ import java.util.Optional;
 public class VentaService {
     @Autowired
     private VentaRepository ventaRepository;
-
-    private final ClienteRestClient clienteRest;
+    @Autowired
+    private ClienteRestClient clienteRest;
 
     public VentaService(ClienteRestClient clienteRest){
         this.clienteRest = clienteRest;
@@ -44,7 +44,8 @@ public class VentaService {
     }
 
     public List<Venta> getVentasByIdCliente(Long idCliente) {
-        return ventaRepository.findByIdCliente(idCliente);
+        List<Venta> ventasCliente = ventaRepository.findByIdCliente(idCliente);
+        return ventasCliente;
     }
 
 }

@@ -14,7 +14,6 @@ public class Vendedor {
     @Column(name = "id")
     private Long idVendedor;
     @Column(name = "usuario_id")
-    private Integer idUsuario;
     private String sucursal;
     private BigDecimal metaMensual;
     @Transient
@@ -27,14 +26,6 @@ public class Vendedor {
 
     public void setIdVendedor(Long idVendedor) {
         this.idVendedor = idVendedor;
-    }
-
-    public Integer getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(Integer idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
     public String getSucursal() {

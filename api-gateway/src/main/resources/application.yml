@@ -1,22 +1,35 @@
 server:
-  port: 8888
+  port:8080
 
 spring:
   main:
-    web-application-type: reactive
-
+    web-application-type: servlet
+  config:
+    enabled: true
+    import: optional:configserver:http://localhost:8888
   application:
     name: api-gateway
 
   cloud:
     gateway:
-      routes:
-        - id: clientes-api
-          uri: http://localhost:8082
-          predicates:
-            - Path=/api/cliente/**
-          filters:
-            - RewritePath=/api/cliente/(?<segment>.*), /api/cliente/${segment}
+      mvc:
+        routes:
+          - id: clientes-api
+            uri: http://localhost:8082
+            predicates:
+              - Path=/api/cliente/**
+
+          - id: ventas-api
+            uri: http://localhost:8083
+            predicates:
+              - Path=/api/venta/**
+              - Path=/api/vendedor/**
+
+
+          - id: usuarios-api
+            uri: http://localhost:8081
+            predicates:
+              - Path=/api/usuarios/**
 
 logging:
   level:
@@ -24,3 +37,6 @@ logging:
     com.gateway.api_gateway_spring_boot: INFO
     org.springframework.cloud.gateway: DEBUG
     org.springframework.web.reactive.function.client: DEBUG
+
+
+

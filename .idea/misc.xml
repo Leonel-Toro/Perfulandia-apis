@@ -25,6 +25,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/eureka-server/pom.xml" />
         <option value="$PROJECT_DIR$/usuarios-api-spring-boot/pom.xml" />
       </set>
     </option>
