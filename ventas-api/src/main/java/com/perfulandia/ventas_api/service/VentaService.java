@@ -2,11 +2,15 @@ package com.perfulandia.ventas_api.service;
 
 import com.perfulandia.ventas_api.client.ClienteRestClient;
 import com.perfulandia.ventas_api.dto.ClienteDTO;
+import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.models.Venta;
 import com.perfulandia.ventas_api.repository.VentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,16 +26,29 @@ public class VentaService {
     }
 
     public Venta procesarVenta(Venta nuevaVenta){
-        ClienteDTO cliente = clienteRest.findById(nuevaVenta.getIdCliente());
-        if(cliente == null){
-            return null;
+        try {
+            ClienteDTO cliente = clienteRest.findById(nuevaVenta.getIdCliente());
+            if (cliente == null) {
+                throw new IllegalArgumentException("Cliente no asignado.");
+            }
+
+            if (nuevaVenta.getVendedor() == null) {
+                throw new IllegalArgumentException("Vendedor no asignado.");
+            }
+
+            if (nuevaVenta.getFecha() == null) {
+                throw new IllegalArgumentException("La fecha no puede estar vacía.");
+            }
+
+            if (nuevaVenta.getTotal() == null || nuevaVenta.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("El total no puede ser nulo, negativo o cero.");
+            }
+
+            return ventaRepository.save(nuevaVenta);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al procesar la venta: " + e.getMessage(), e);
         }
-
-        return ventaRepository.save(nuevaVenta);
-    }
-
-    public Venta save(Venta venta){
-        return procesarVenta(venta);
     }
 
     public List<Venta> getVentas(){
@@ -47,5 +64,12 @@ public class VentaService {
         List<Venta> ventasCliente = ventaRepository.findByIdCliente(idCliente);
         return ventasCliente;
     }
+
+    public List<Venta> getVentasByIdVendedor(Vendedor vendedor){
+        List<Venta> ventasVendedor = ventaRepository.findByVendedor(vendedor);
+        return ventasVendedor;
+    }
+
+
 
 }
