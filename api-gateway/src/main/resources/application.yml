@@ -29,7 +29,7 @@ spring:
           - id: usuarios-api
             uri: http://localhost:8081
             predicates:
-              - Path=/api/usuarios/**
+              - Path=/**
 
 logging:
   level:

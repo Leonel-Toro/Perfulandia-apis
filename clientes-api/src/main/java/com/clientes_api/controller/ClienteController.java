@@ -6,6 +6,7 @@ import com.clientes_api.models.Cliente;
 import com.clientes_api.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -16,6 +17,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/lista")
     public ResponseEntity<List<Cliente>> getAll() {
         return ResponseEntity.ok(clienteService.getAll());
@@ -30,10 +32,11 @@ public class ClienteController {
             return ResponseEntity.badRequest().body(new ApiResponse(400, ex.getMessage()));
         } catch (Exception ex) {
             return ResponseEntity.badRequest()
-                    .body(new ApiResponse(400, "Error al registrar cliente: " + ex.getMessage()));
+                    .body(new ApiResponse(400, ex.getMessage()));
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{idCliente}")
     public ResponseEntity<Cliente> getClienteById(@PathVariable Integer idCliente){
         Cliente cliente = clienteService.getById(idCliente);

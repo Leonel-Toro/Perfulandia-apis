@@ -4,6 +4,7 @@ import com.usuarios_api.service.UsuarioDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -31,7 +32,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // no se usan sesiones, sino tokens JWT
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login","/api/cliente/nuevo", "/api/vendedor/nuevo").permitAll() // permitimos solo las rutas necesarias para poder registrarse y acceder
+                        .requestMatchers("/login","/logout").permitAll() // permitimos solo las rutas necesarias para poder registrarse y acceder
+                        .requestMatchers(HttpMethod.POST, "/").permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(usuarioDetailsService)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // 🧱 Nuestro filtro personalizado

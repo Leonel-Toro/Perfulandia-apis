@@ -7,6 +7,7 @@ import com.perfulandia.ventas_api.service.VendedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -19,11 +20,13 @@ public class VendedorController {
     @Autowired
     private VendedorService vendedorService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<Vendedor>> getAll(){
         return ResponseEntity.ok(vendedorService.getAll());
     }
-    
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{idVendedor}")
     public ResponseEntity<Vendedor> getVendedorById(@PathVariable Long idVendedor){
         Vendedor vendedor = vendedorService.getById(idVendedor);
