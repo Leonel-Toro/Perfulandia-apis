@@ -1,12 +1,12 @@
 package com.perfulandia.ventas_api.service;
 
-import com.perfulandia.ventas_api.client.ClienteRestClient;
 import com.perfulandia.ventas_api.dto.ClienteDTO;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.models.Venta;
 import com.perfulandia.ventas_api.repository.VentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -18,16 +18,13 @@ import java.util.Optional;
 public class VentaService {
     @Autowired
     private VentaRepository ventaRepository;
-    @Autowired
-    private ClienteRestClient clienteRest;
 
-    public VentaService(ClienteRestClient clienteRest){
-        this.clienteRest = clienteRest;
-    }
+    @Autowired
+    private ClienteDTOService clienteDTOService;
 
     public Venta procesarVenta(Venta nuevaVenta){
         try {
-            ClienteDTO cliente = clienteRest.findById(nuevaVenta.getIdCliente());
+            ClienteDTO cliente = clienteDTOService.findById(nuevaVenta.getIdCliente());
             if (cliente == null) {
                 throw new IllegalArgumentException("Cliente no asignado.");
             }
@@ -69,7 +66,4 @@ public class VentaService {
         List<Venta> ventasVendedor = ventaRepository.findByVendedor(vendedor);
         return ventasVendedor;
     }
-
-
-
 }

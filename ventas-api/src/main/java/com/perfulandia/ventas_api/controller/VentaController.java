@@ -1,7 +1,6 @@
 package com.perfulandia.ventas_api.controller;
 
 import com.clientes_api.models.ApiResponse;
-import com.perfulandia.ventas_api.client.ClienteRestClient;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.models.Venta;
 import com.perfulandia.ventas_api.service.VendedorService;

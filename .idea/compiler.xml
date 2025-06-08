@@ -8,8 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
-        <module name="soporte-api" />
-        <module name="envios-api" />
       </profile>
       <profile name="Annotation profile for ventas-api" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -18,6 +16,8 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
+        <module name="soporte-api" />
+        <module name="envios-api" />
         <module name="clientes-api" />
         <module name="usuarios-api" />
         <module name="ventas-api" />

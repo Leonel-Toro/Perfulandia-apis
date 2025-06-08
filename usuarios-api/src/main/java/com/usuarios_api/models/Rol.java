@@ -1,7 +1,6 @@
 package com.usuarios_api.models;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 
 @Entity
 @Table(name = "roles")
