@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,13 +48,27 @@ public class VendedorService {
         }
     }
 
-
-    public Vendedor update(Long id, Vendedor vendedor) {
+    public Vendedor actualizarVendedor(Long id, Vendedor vendedor) {
+        List<String> errores = new ArrayList<>();
+        Vendedor vendedorUp = new Vendedor();
         if (vendedorRepository.existsById(id)) {
-            vendedor.setIdVendedor(id);
-            return vendedorRepository.save(vendedor);
+            vendedorUp.setIdVendedor(id);
+            if(vendedor.getSucursal() == null || vendedor.getSucursal().equals("")){
+                errores.add("Sucursal: La sucursal no debe estar vacia.");
+            }
+
+            if(vendedor.getMetaMensual() == null || vendedor.getMetaMensual().compareTo(BigDecimal.ZERO) <= 0){
+                errores.add("Meta Mensual: La meta mensual no debe estar vacia o debe ser mayor a 0");
+            }
+            if (!errores.isEmpty()) {
+                throw new IllegalArgumentException(String.join("; ", errores));
+            }
+            vendedorUp.setMetaMensual(vendedor.getMetaMensual());
+            vendedorUp.setSucursal(vendedor.getSucursal());
+            vendedorRepository.save(vendedorUp);
+            return vendedorUp;
         }
-        return null; // No se encontró la Cliente
+        return null;
     }
 
     public Vendedor delete(Long id) {

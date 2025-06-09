@@ -1,6 +1,7 @@
 package com.perfulandia.ventas_api.controller;
 
 import com.clientes_api.models.ApiResponse;
+import com.clientes_api.models.Cliente;
 import com.perfulandia.ventas_api.dto.RegistroVendedorDTO;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.service.VendedorService;
@@ -53,5 +54,19 @@ public class VendedorController {
             return ResponseEntity.badRequest().body(new ApiResponse(400, error.getMessage()));
         }
         return ResponseEntity.status(HttpStatus.OK).body(request);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{idVendedor}")
+    public ResponseEntity<?> actualizarVendedor(@PathVariable Long idVendedor, Vendedor vendedor){
+        try {
+            Vendedor vendedorActualizado = vendedorService.actualizarVendedor(idVendedor,vendedor);
+            return ResponseEntity .status(HttpStatus.OK).body(new ApiResponse(201, "Se ha actualizado el vendedor."));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(new ApiResponse(400, ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(400, ex.getMessage()));
+        }
     }
 }
