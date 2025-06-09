@@ -1,5 +1,19 @@
 package com.perfulandia.ventas_api.controller;
 
+import com.clientes_api.models.ApiResponse;
+import com.perfulandia.ventas_api.models.Vendedor;
+import com.perfulandia.ventas_api.models.Venta;
+import com.perfulandia.ventas_api.service.VendedorService;
+import com.perfulandia.ventas_api.service.VentaService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -20,8 +34,10 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/venta")
 @RequiredArgsConstructor
 public class VentaController {
-
-    private final VentaService ventaService;
+    @Autowired
+    private VentaService ventaService;
+    @Autowired
+    private VendedorService vendedorService;
 
     @GetMapping("")
     public ResponseEntity<List<Venta>> listaVentas(){
@@ -33,12 +49,16 @@ public class VentaController {
     }
 
     @PostMapping("/nueva")
-    public ResponseEntity<?> nuevaVenta(@RequestBody VentaConCuponDTO request){
-        Venta ventaProcesada = ventaService.save(request.getVenta(), request.getCodigoCupon());
-        if(ventaProcesada == null){
-            return ResponseEntity.badRequest().body("Cliente o cupón inválido");
+    public ResponseEntity<?> nuevaVenta(@RequestBody Venta venta){
+        try{
+            Venta nuevaVenta = ventaService.procesarVenta(venta);
+            return ResponseEntity.ok(venta);
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse(400, e.getMessage()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(500, "Error interno: " + e.getMessage()));
         }
-        return ResponseEntity.ok(ventaProcesada);
     }
 
     @GetMapping("/cliente/{idCliente}")
@@ -47,9 +67,37 @@ public class VentaController {
         return ResponseEntity.ok(ventas);
     }
 
-    @Data
-    public static class VentaConCuponDTO {
-        private Venta venta;
-        private String codigoCupon;
+   
+    @GetMapping("/vendedor/{idVendedor}")
+    public ResponseEntity<?> listarVentasByVendedor(@PathVariable Long idVendedor) {
+        try {
+            Vendedor vendedor = vendedorService.getById(idVendedor);
+            if(vendedor == null){
+                return ResponseEntity.badRequest().body(new ApiResponse(400, "Vendedor no encontrado."));
+            }
+
+            List<Venta> ventas = ventaService.getVentasByIdVendedor(vendedor);
+            return ResponseEntity.ok(ventas);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(500, "Error al obtener ventas: " + e.getMessage()));
+        }
     }
+
+    @GetMapping("/vendedor/{idVendedor}")
+    public ResponseEntity<?> listarVentasByVendedor(@PathVariable Long idVendedor) {
+        try {
+            Vendedor vendedor = vendedorService.getById(idVendedor);
+            if(vendedor == null){
+                return ResponseEntity.badRequest().body(new ApiResponse(400, "Vendedor no encontrado."));
+            }
+
+            List<Venta> ventas = ventaService.getVentasByIdVendedor(vendedor);
+            return ResponseEntity.ok(ventas);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(500, "Error al obtener ventas: " + e.getMessage()));
+        }
+    }
+
 }

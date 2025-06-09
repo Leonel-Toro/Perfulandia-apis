@@ -6,6 +6,7 @@ import com.clientes_api.models.Cliente;
 import com.clientes_api.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -16,6 +17,7 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/lista")
     public ResponseEntity<List<Cliente>> getAll() {
         return ResponseEntity.ok(clienteService.getAll());
@@ -23,47 +25,18 @@ public class ClienteController {
 
     @PostMapping("/nuevo")
     public ResponseEntity<?> nuevoCliente(@RequestBody RegistroClienteDTO request){
-        List<String> errores = new ArrayList<>();
-        if(request.getNombre() == null || request.getNombre().equals("")){
-            errores.add("Nombre: El nombre no debe estar vacio");
-        }
-
-        if(request.getApellido() == null || request.getApellido().equals("")){
-            errores.add("Apellido: El apellido no debe estar vacio");
-        }
-
-        if(request.getTelefono() == null || !request.getTelefono().matches("^\\d{9}$")){
-            errores.add("Telefono: El teléfono debe contener 9 dígitos");
-        }
-
-        if(request.getRut() == null){
-            errores.add("Rut: El RUT no es válido");
-        }
-
-        if(request.getDireccion() == null || request.getDireccion().equals("")){
-            errores.add("Direccion: La dirección no debe estar vacia");
-        }
-
-        if(request.getCorreo() == null || request.getCorreo().equals("")){
-            errores.add("Correo: El correo es obligatorio");
-        }
-
-        if(request.getPassword() == null || request.getPassword().equals("") || request.getPassword().length() < 8){
-            errores.add("Contraseña: La contraseña debe tener al menos 8 caracteres y no estar vacia");
-        }
-
-        if (!errores.isEmpty()) {
-            return ResponseEntity.badRequest().body(new ApiResponse(400,String.join("; ", errores)));
-        }
-
-        try{
+        try {
             clienteService.registrarCliente(request);
-        }catch (Exception error){
-            return ResponseEntity.badRequest().body(new ApiResponse(400,error.getMessage()));
+            return ResponseEntity.ok(new ApiResponse(201, "Se ha creado el cliente."));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(new ApiResponse(400, ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(400, ex.getMessage()));
         }
-        return ResponseEntity.ok().body(new ApiResponse(200,"Se ha creado el cliente."));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{idCliente}")
     public ResponseEntity<Cliente> getClienteById(@PathVariable Integer idCliente){
         Cliente cliente = clienteService.getById(idCliente);

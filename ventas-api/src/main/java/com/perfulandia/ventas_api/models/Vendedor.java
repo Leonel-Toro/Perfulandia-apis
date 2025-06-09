@@ -14,6 +14,7 @@ public class Vendedor {
     @Column(name = "id")
     private Long idVendedor;
     @Column(name = "usuario_id")
+    private Long idUsuario;
     private String sucursal;
     private BigDecimal metaMensual;
     @Transient
@@ -50,5 +51,13 @@ public class Vendedor {
 
     public void setVentas(List<Venta> ventas) {
         this.ventas = ventas;
+    }
+
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 }
