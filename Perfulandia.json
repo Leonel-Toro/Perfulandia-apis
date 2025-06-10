@@ -1,0 +1,647 @@
+{
+	"info": {
+		"_postman_id": "2df18b8b-8ed1-407b-984e-afa3684f4832",
+		"name": "Api-gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45178741",
+		"_collection_link": "https://leoneltoro.postman.co/workspace/Leonel-Toro's-Workspace~8fa9962b-443a-4aae-8d1c-f1f3c62993ae/collection/45178741-2df18b8b-8ed1-407b-984e-afa3684f4832?action=share&source=collection_link&creator=45178741"
+	},
+	"item": [
+		{
+			"name": "Cliente",
+			"item": [
+				{
+					"name": "Crear nuevo cliente",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Leonel\",\r\n  \"apellido\": \"Toro\",\r\n  \"rut\": \"20435455-3\",\r\n  \"telefono\": \"912345678\",\r\n  \"direccion\": \"Av. Siempre Viva 743\",\r\n  \"correo\": \"leo@outlook.com\",\r\n  \"password\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_BASE}}/api/cliente/nuevo",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"api",
+								"cliente",
+								"nuevo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar cliente existente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Leonel\",\r\n  \"apellido\": \"Toro Editado\",\r\n  \"rut\": \"12345678-9\",\r\n  \"telefono\": \"912345678\",\r\n  \"direccion\": \"Av. Siempre Viva 743\",\r\n  \"correo\": \"leo2@outlook.com\",\r\n  \"password\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_BASE}}/api/cliente/",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"api",
+								"cliente",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Preferencias cliente",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "/api/cliente/preferencias",
+							"path": [
+								"api",
+								"cliente",
+								"preferencias"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vendedor",
+			"item": [
+				{
+					"name": "nueva venta",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fecha\": \"2025-05-26T00:00:00\",\r\n  \"total\": 14990,\r\n  \"vendedor\":{\r\n    \"idVendedor\": 1,\r\n    \"idUsuario\": 2,\r\n    \"sucursal\": \"Santiago\",\r\n    \"metaMensual\": 150000},\r\n  \"idCliente\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_BASE}}/api/venta/nueva",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"api",
+								"venta",
+								"nueva"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver compras de cliente",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_BASE}}/api/ventas/cliente/{idCliente}",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"api",
+								"ventas",
+								"cliente",
+								"{idCliente}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear nuevo vendedor",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sucursal\": \"Santiago\",\r\n  \"metaMensual\": 150000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_BASE}}/api/vendedor/nuevo",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"api",
+								"vendedor",
+								"nuevo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "todas las ventas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL_BASE}}/api/venta/cliente/2",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"api",
+								"venta",
+								"cliente",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar vendedor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"sucursal\": \"Valparaiso\",\r\n  \"metaMensual\": 200000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_BASE}}/api/vendedor/{id}",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"api",
+								"vendedor",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver ventas de vendedor",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_BASE}}/api/ventas/vendedor/{idVendedor}",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"api",
+								"ventas",
+								"vendedor",
+								"{idVendedor}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Productos",
+			"item": [
+				{
+					"name": "Nuevo producto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"nombreProducto\":\"AQUA DE GIOVANNI\",\r\n \"descripcionProducto\": \"pectacular perfume hecho a base de giovannis\",\r\n \"precio\":105000,\r\n \"categoria\":{\r\n    \"id\":1,\r\n    \"nombre\":\"Perfumes exoticos\"    \r\n },\r\n \"marca\":\"Antonio banderin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_BASE}}/productos/",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"productos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lista productos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_BASE}}/productos/",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"productos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver producto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_BASE}}/productos/{idProducto}",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"productos",
+								"{idProducto}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lista productos por categoria",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL_BASE}}/productos/categoria?nombreCategoria={nombreCategoria}",
+							"host": [
+								"{{URL_BASE}}"
+							],
+							"path": [
+								"productos",
+								"categoria"
+							],
+							"query": [
+								{
+									"key": "nombreCategoria",
+									"value": "{nombreCategoria}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"correo\": \"leo2@outlook.com\",\r\n  \"password\": \"12345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL_BASE}}/login",
+					"host": [
+						"{{URL_BASE}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ver Usuario",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL_BASE}}/usuario/1",
+					"host": [
+						"{{URL_BASE}}"
+					],
+					"path": [
+						"usuario",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lista cliente",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{URL_BASE}}/api/cliente/lista",
+					"host": [
+						"{{URL_BASE}}"
+					],
+					"path": [
+						"api",
+						"cliente",
+						"lista"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lista usuarios por roles",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL_BASE}}/rol/CLIENTE",
+					"host": [
+						"{{URL_BASE}}"
+					],
+					"path": [
+						"rol",
+						"CLIENTE"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL_BASE}}/logout",
+					"host": [
+						"{{URL_BASE}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

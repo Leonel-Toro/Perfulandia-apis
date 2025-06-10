@@ -26,12 +26,11 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="eureka-server" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="api-gateway" options="-parameters" />
+      <module name="api-gateway-spring-boot" options="-parameters" />
       <module name="clientes-api" options="-parameters" />
       <module name="cupones-api" options="-parameters" />
       <module name="envios-api" options="-parameters" />
