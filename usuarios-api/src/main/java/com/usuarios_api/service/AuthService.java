@@ -54,7 +54,7 @@ public class AuthService {
     }
 
     public List<Usuario> findUsuariosByRol(String tipoRol){
-        List<Usuario> listaUsuario = usuarioRepository.findByRolesNombre(tipoRol);
+        List<Usuario> listaUsuario = usuarioRepository.findByRolesRol(tipoRol);
         if(listaUsuario!= null){
             return listaUsuario;
         }
