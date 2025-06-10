@@ -1,12 +1,14 @@
 package com.perfulandia.ventas_api.controller;
 
 import com.clientes_api.models.ApiResponse;
+import com.clientes_api.models.Cliente;
 import com.perfulandia.ventas_api.dto.RegistroVendedorDTO;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.service.VendedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -19,11 +21,13 @@ public class VendedorController {
     @Autowired
     private VendedorService vendedorService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("")
     public ResponseEntity<List<Vendedor>> getAll(){
         return ResponseEntity.ok(vendedorService.getAll());
     }
-    
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{idVendedor}")
     public ResponseEntity<Vendedor> getVendedorById(@PathVariable Long idVendedor){
         Vendedor vendedor = vendedorService.getById(idVendedor);
@@ -50,5 +54,19 @@ public class VendedorController {
             return ResponseEntity.badRequest().body(new ApiResponse(400, error.getMessage()));
         }
         return ResponseEntity.status(HttpStatus.OK).body(request);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{idVendedor}")
+    public ResponseEntity<?> actualizarVendedor(@PathVariable Long idVendedor, Vendedor vendedor){
+        try {
+            Vendedor vendedorActualizado = vendedorService.actualizarVendedor(idVendedor,vendedor);
+            return ResponseEntity .status(HttpStatus.OK).body(new ApiResponse(201, "Se ha actualizado el vendedor."));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(new ApiResponse(400, ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(400, ex.getMessage()));
+        }
     }
 }

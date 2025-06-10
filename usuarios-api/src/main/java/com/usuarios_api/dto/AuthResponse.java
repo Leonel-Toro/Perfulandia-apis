@@ -7,6 +7,4 @@ import lombok.Data;
 @AllArgsConstructor
 public class AuthResponse {
     private String JtwToken;
-    private String rol;
-    private String correo;
 }
