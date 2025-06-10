@@ -17,8 +17,8 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="soporte-api" />
-        <module name="clientes-api" />
         <module name="envios-api" />
+        <module name="clientes-api" />
         <module name="usuarios-api" />
         <module name="ventas-api" />
         <module name="productos-api" />
