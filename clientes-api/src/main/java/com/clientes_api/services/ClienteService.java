@@ -3,7 +3,6 @@ package com.clientes_api.services;
 import com.clientes_api.dto.RegistroClienteDTO;
 import com.clientes_api.models.Cliente;
 import com.clientes_api.repository.ClienteRepository;
-import com.usuarios_api.dto.RegistroUsuarioRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
