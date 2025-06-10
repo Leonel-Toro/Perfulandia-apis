@@ -1,13 +1,11 @@
 package com.clientes_api.controller;
 
 import com.clientes_api.dto.RegistroClienteDTO;
-import com.clientes_api.models.ApiResponse;
 import com.clientes_api.models.Cliente;
 import com.clientes_api.services.ClienteService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
