@@ -4,8 +4,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
-@HttpExchange(url = "http://localhost:8081/")
-public interface UsuarioRestClient {
+import com.perfulandia.ventas_api.dto.EnvioRequest;
+import com.perfulandia.ventas_api.dto.EnvioResponse;
+
+@HttpExchange("/envios")
+public interface EnvioClient {
+
     @PostExchange
-    void registrarUsuario(@RequestBody RegistroUsuarioRequest request);
+    EnvioResponse crearEnvio(@RequestBody EnvioRequest envioRequest);
 }
