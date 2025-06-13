@@ -31,7 +31,7 @@ public class EnviosController {
 
     // GET /envios/{id} -> obtener por id
     @GetMapping("/{id}")
-    public ResponseEntity<Envios> getEnvioById(@PathVariable Long id) {
+    public ResponseEntity<Envios> getEnvioById(@PathVariable int id) {
         Envios envio = enviosService.getById(id);
         if (envio == null) {
             return ResponseEntity.notFound().build();

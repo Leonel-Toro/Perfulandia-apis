@@ -8,6 +8,7 @@ public class Inventario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne()
     @JoinColumn(name = "producto_id")
     private Producto producto;
     private int cantidad;

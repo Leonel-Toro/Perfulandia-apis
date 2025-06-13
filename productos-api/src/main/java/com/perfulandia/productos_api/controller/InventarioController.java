@@ -3,15 +3,13 @@ package com.perfulandia.productos_api.controller;
 import com.perfulandia.productos_api.dto.InventarioDTO;
 import com.perfulandia.productos_api.models.ApiResponse;
 import com.perfulandia.productos_api.models.Inventario;
-import com.perfulandia.productos_api.models.Producto;
 import com.perfulandia.productos_api.service.InventarioService;
-import com.perfulandia.productos_api.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/inventario")
@@ -19,14 +17,13 @@ public class InventarioController {
     @Autowired
     private InventarioService inventarioService;
 
-    @Autowired
-    private ProductoService productoService;
-
+    @PreAuthorize("hasRole('ADMIN','VENDEDOR')")
     @GetMapping("/lista")
     public ResponseEntity<?> listaInventario(){
         return ResponseEntity.status(HttpStatus.OK).body(inventarioService.findAll());
     }
 
+    @PreAuthorize("hasRole('ADMIN','VENDEDOR')")
     @PostMapping("/nuevo")
     public ResponseEntity<?> guardarInventario(@RequestBody Inventario inventario) {
         try {
@@ -37,6 +34,7 @@ public class InventarioController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN','VENDEDOR')")
     @PutMapping("/ajustar")
     public ResponseEntity<?> ajusteInventario(@RequestBody InventarioDTO request) {
         Inventario inventario = inventarioService.findByIdProducto(request.getIdProducto());

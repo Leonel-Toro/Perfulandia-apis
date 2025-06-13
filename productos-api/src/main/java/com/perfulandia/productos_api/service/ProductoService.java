@@ -65,6 +65,6 @@ public class ProductoService {
     }
 
     public List<Producto> listaProductosByCategoria(String nombreCategoria){
-        return productoRepository.findByCategoriaNombre(nombreCategoria);
+        return productoRepository.findByCategoriaNombreCategoria(nombreCategoria);
     }
 }

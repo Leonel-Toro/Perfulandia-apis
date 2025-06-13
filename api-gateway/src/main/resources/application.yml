@@ -25,6 +25,21 @@ spring:
               - Path=/api/venta/**
               - Path=/api/vendedor/**
 
+          - id: productos-api
+            uri: http://localhost:8084
+            predicates:
+                - Path=/api/productos/**
+                - Path=/api/inventario/**
+
+          - id: soporte-api
+            uri: http://localhost:8085
+            predicates:
+              - Path=/api/soporte/**
+
+          - id: envios-api
+            uri: http://localhost:8086
+            predicates:
+              - Path=/envios/**
 
           - id: usuarios-api
             uri: http://localhost:8081

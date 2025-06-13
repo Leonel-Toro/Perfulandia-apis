@@ -10,6 +10,7 @@ public class DetalleVenta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne()
     @JoinColumn(name = "venta_id")
     private Venta venta;
     @JoinColumn(name = "producto_id")

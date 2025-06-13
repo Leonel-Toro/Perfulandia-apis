@@ -3,9 +3,7 @@ package com.perfulandia.productos_api.service;
 import com.perfulandia.productos_api.models.Inventario;
 import com.perfulandia.productos_api.repository.InventarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +56,10 @@ public class InventarioService {
     }
 
     public Inventario findByIdProducto(Long idProducto){
-        return inventarioRepository.findByIdProducto(idProducto);
+        Optional<Inventario> inventarioOpt = inventarioRepository.findByProducto_Id(idProducto);
+        if(inventarioOpt.isPresent()){
+            return inventarioOpt.get();
+        }
+        return null;
     }
 }

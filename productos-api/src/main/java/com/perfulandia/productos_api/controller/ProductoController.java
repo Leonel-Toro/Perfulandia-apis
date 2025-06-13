@@ -17,11 +17,12 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
 
+    @PreAuthorize("hasRole('ADMIN','VENDEDOR')")
     @GetMapping("/")
     public ResponseEntity<?> listaProductos(){
         return ResponseEntity.status(HttpStatus.OK).body(productoService.verProductos());
     }
-
+    @PreAuthorize("hasRole('ADMIN','VENDEDOR')")
     @PostMapping("/")
     public ResponseEntity<?> ingresarNuevoProducto(@RequestBody Producto nuevoProducto){
         try{
@@ -35,6 +36,7 @@ public class ProductoController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN','VENDEDOR')")
     @GetMapping("/{idProducto}")
     public ResponseEntity<?> verProducto(@PathVariable Long idProducto){
         if(productoService.productoPorId(idProducto) != null){
@@ -43,6 +45,7 @@ public class ProductoController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(400, "No existe ese producto."));
     }
 
+    @PreAuthorize("hasRole('ADMIN','VENDEDOR')")
     @GetMapping("/categoria")
     public ResponseEntity<?> productosPorNombreCategoria(@RequestParam String nombreCategoria){
         List<Producto> productos = productoService.listaProductosByCategoria(nombreCategoria);
