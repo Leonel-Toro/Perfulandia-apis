@@ -1,11 +1,15 @@
 package com.perfulandia.envios_api.model;
 
-import jakarta.persistence.*;
+import java.sql.Date;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Date;
 
 
 @Entity // Marca la clase como una entidad JPA 
@@ -28,4 +32,5 @@ public class Envios {
     // Atributo tracking que representa el número de seguimiento del envío
     private String tracking;
 
+    private String direccion;
 }

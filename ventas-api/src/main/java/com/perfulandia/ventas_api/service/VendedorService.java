@@ -1,18 +1,19 @@
 package com.perfulandia.ventas_api.service;
 
-import com.perfulandia.ventas_api.dto.RegistroVendedorDTO;
-import com.perfulandia.ventas_api.models.Vendedor;
-import com.perfulandia.ventas_api.repository.VendedorRepository;
-import com.usuarios_api.dto.RegistroUsuarioRequest;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.perfulandia.ventas_api.dto.RegistroUsuarioRequest;
+import com.perfulandia.ventas_api.dto.RegistroVendedorDTO;
+import com.perfulandia.ventas_api.models.Vendedor;
+import com.perfulandia.ventas_api.repository.VendedorRepository;
 
 @Service
 public class VendedorService {

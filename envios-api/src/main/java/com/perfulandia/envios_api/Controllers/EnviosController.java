@@ -1,16 +1,21 @@
 package com.perfulandia.envios_api.Controllers;
 
-import com.perfulandia.envios_api.model.Envios;
-import com.perfulandia.envios_api.services.EnviosService;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.ArrayList;
-
+import com.perfulandia.envios_api.model.Envios;
+import com.perfulandia.envios_api.services.EnviosService;
 
 @RestController
 @RequestMapping("/api/envios")
@@ -18,14 +23,6 @@ public class EnviosController {
 
     @Autowired
     private EnviosService enviosService;
-
-    // Creamos una lista para simular una base de datos
-    private List<Envios> envios = new ArrayList<>();
-    public EnviosController() {
-        envios.add(new Envios(1, "Enviado", null, "Transportista 1", "123456"));
-        envios.add(new Envios(2, "En Ruta", null, "Transportista 2", "654321"));
-        envios.add(new Envios(3, "Entregado", null, "Transportista 3", "789012"));
-    }
 
     // Método para obtener todos los envíos
     @GetMapping({"","/"})
@@ -54,9 +51,9 @@ public class EnviosController {
     // Método para actualizar un envío existente
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Envios envio) {
-        Envios Actualizado = enviosService.update(id, envio);
-        if (Actualizado != null) {
-            return ResponseEntity.ok(Actualizado);
+        Envios actualizado = enviosService.update(id, envio);
+        if (actualizado != null) {
+            return ResponseEntity.ok(actualizado);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Envio no encontrado");
         }
@@ -73,5 +70,14 @@ public class EnviosController {
         }
     }
 
-
+    // Nuevo endpoint: Crear envío y completar dirección desde microservicio cliente
+    @PostMapping("/nuevo-con-cliente/{idCliente}")
+    public ResponseEntity<?> crearEnvioConCliente(@PathVariable Integer idCliente, @RequestBody Envios envio) {
+        try {
+            Envios nuevo = enviosService.crearEnvioConCliente(idCliente, envio);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

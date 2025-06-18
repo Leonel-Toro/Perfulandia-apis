@@ -2,6 +2,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SoporteApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.soporte_api.SoporteApiApplication",
+            "projectName": "soporte-api"
+        },
+        {
+            "type": "java",
+            "name": "ProductosApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.productos_api.ProductosApiApplication",
+            "projectName": "productos-api"
+        },
+        {
+            "type": "java",
+            "name": "ClientesApiApplication",
+            "request": "launch",
+            "mainClass": "com.clientes_api.ClientesApiApplication",
+            "projectName": "clientes-api"
+        },
+        {
+            "type": "java",
+            "name": "CuponesApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.cupones_api.CuponesApiApplication",
+            "projectName": "cupones-api"
+        },
+        {
+            "type": "java",
             "name": "EnviosApiApplication",
             "request": "launch",
             "mainClass": "com.perfulandia.envios_api.EnviosApiApplication",
