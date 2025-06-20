@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/cliente/nuevo").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

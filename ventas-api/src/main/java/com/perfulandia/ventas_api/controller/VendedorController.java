@@ -5,18 +5,21 @@ import com.clientes_api.models.Cliente;
 import com.perfulandia.ventas_api.dto.RegistroVendedorDTO;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.service.VendedorService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vendedor")
+@RequestMapping("api/vendedor")
 public class VendedorController {
     @Autowired
     private VendedorService vendedorService;
@@ -35,7 +38,7 @@ public class VendedorController {
     }
     
     @PostMapping("/nuevo")
-    public ResponseEntity<?> nuevoVendedor(@RequestBody RegistroVendedorDTO request){
+    public ResponseEntity<?> nuevoVendedor(@RequestBody RegistroVendedorDTO request, HttpServletRequest httpRequest){
         List<String> errores = new ArrayList<>();
         if(request.getSucursal() == null || request.getSucursal().equals("")){
             errores.add("Sucursal: La sucursal no debe estar vacia.");
@@ -50,8 +53,8 @@ public class VendedorController {
         }
         try{
             vendedorService.registrarVendedor(request);
-        }catch (Exception error){
-            return ResponseEntity.badRequest().body(new ApiResponse(400, error.getMessage()));
+        }catch (HttpClientErrorException | HttpServerErrorException ex){
+            return ResponseEntity.badRequest().body(new ApiResponse(400, ex.getMessage()));
         }
         return ResponseEntity.status(HttpStatus.OK).body(request);
     }

@@ -69,7 +69,7 @@ public class VentaService {
 
             try {
                 restTemplate.put(
-                        "http://localhost:8082/api/inventario/ajustar",
+                        "http://localhost:8084/api/inventario/ajustar",
                         new InventarioDTO(detalleVenta.getIdProducto(), detalleVenta.getCantidad())
                 );
             }catch (HttpStatusCodeException e) {

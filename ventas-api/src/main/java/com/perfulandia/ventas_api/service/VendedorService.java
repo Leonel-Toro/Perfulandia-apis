@@ -41,7 +41,7 @@ public class VendedorService {
         newUser.setRol("VENDEDOR");
 
         try {
-            restTemplate.postForEntity("http://localhost:8081/", newUser, Void.class);
+            restTemplate.postForEntity("http://localhost:8081/api/usuarios/", newUser, Void.class);
             vendedorRepository.save(vendedor);
         }catch (HttpClientErrorException error){
             throw new RuntimeException(error.getResponseBodyAsString());

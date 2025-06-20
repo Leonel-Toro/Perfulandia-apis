@@ -22,14 +22,12 @@ spring:
           - id: ventas-api
             uri: http://localhost:8083
             predicates:
-              - Path=/api/venta/**
-              - Path=/api/vendedor/**
+              - Path=/api/venta/**,/api/vendedor/**
 
           - id: productos-api
             uri: http://localhost:8084
             predicates:
-                - Path=/api/productos/**
-                - Path=/api/inventario/**
+                - Path=/api/productos/**, /api/inventario/**
 
           - id: soporte-api
             uri: http://localhost:8085
@@ -44,7 +42,7 @@ spring:
           - id: usuarios-api
             uri: http://localhost:8081
             predicates:
-              - Path=/**
+              - Path=/api/usuarios/**
 
 logging:
   level:

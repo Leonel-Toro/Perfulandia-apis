@@ -79,7 +79,7 @@ public class ClienteService {
         newUser.setRol("CLIENTE");
 
         try {
-            restTemplate.postForEntity("http://localhost:8081/", newUser, Void.class);
+            restTemplate.postForEntity("http://localhost:8081/api/usuarios/", newUser, Void.class);
             clienteRepository.save(cliente);
         } catch (HttpClientErrorException error) {
             // Lanza el mensaje de error tal como lo devuelve el microservicio de usuarios
