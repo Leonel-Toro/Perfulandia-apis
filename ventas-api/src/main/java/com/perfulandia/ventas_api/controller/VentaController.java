@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,8 @@ public class VentaController {
     @Autowired
     private VendedorService vendedorService;
 
-    @GetMapping("")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
+    @GetMapping("/")
     public ResponseEntity<List<Venta>> listaVentas(){
         List<Venta> listaVentas = ventaService.getVentas();
         if(listaVentas.isEmpty()) {
@@ -39,6 +41,7 @@ public class VentaController {
         return ResponseEntity.ok(listaVentas);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @PostMapping("/nueva")
     public ResponseEntity<?> nuevaVenta(@RequestBody Venta venta, DetalleVenta detalleVenta){
         try{
@@ -52,13 +55,14 @@ public class VentaController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/cliente/{idCliente}")
     public ResponseEntity<List<Venta>> listaVentasByIdCliente(@PathVariable Long idCliente){
         List<Venta> ventas = ventaService.getVentasByIdCliente(idCliente);
         return ResponseEntity.ok(ventas);
     }
 
-   
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/vendedor/{idVendedor}")
     public ResponseEntity<?> listarVentasByVendedor(@PathVariable Long idVendedor) {
         try {

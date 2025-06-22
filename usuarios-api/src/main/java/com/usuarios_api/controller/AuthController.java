@@ -37,7 +37,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<?> registrarUsuario(@RequestBody RegistroUsuarioRequest request) {
         try {
             Usuario nuevoUsuario = authService.registrarUsuario(request);

@@ -17,13 +17,13 @@ public class InventarioController {
     @Autowired
     private InventarioService inventarioService;
 
-    @PreAuthorize("hasRole('ADMIN','VENDEDOR')")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/lista")
     public ResponseEntity<?> listaInventario(){
         return ResponseEntity.status(HttpStatus.OK).body(inventarioService.findAll());
     }
 
-    @PreAuthorize("hasRole('ADMIN','VENDEDOR')")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @PostMapping("/nuevo")
     public ResponseEntity<?> guardarInventario(@RequestBody Inventario inventario) {
         try {
@@ -34,7 +34,7 @@ public class InventarioController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN','VENDEDOR')")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @PutMapping("/ajustar")
     public ResponseEntity<?> ajusteInventario(@RequestBody InventarioDTO request) {
         Inventario inventario = inventarioService.findByIdProducto(request.getIdProducto());

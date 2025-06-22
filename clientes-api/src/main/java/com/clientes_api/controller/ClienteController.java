@@ -36,7 +36,7 @@ public class ClienteController {
                     .body(new ApiResponse(400, ex.getMessage()));
         }
     }
-    @PreAuthorize("hasRole('ADMIN','CLIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     @PutMapping("/{idCliente}")
     public ResponseEntity<?> actualizarClienteId(@PathVariable Integer idCliente,Cliente cliente){
         try {
