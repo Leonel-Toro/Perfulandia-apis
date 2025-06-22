@@ -16,8 +16,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/usuarios")
 public class AuthController {
     @Autowired
     private AuthService authService;
@@ -35,7 +37,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<?> registrarUsuario(@RequestBody RegistroUsuarioRequest request) {
         try {
             Usuario nuevoUsuario = authService.registrarUsuario(request);
@@ -43,6 +45,24 @@ public class AuthController {
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
+    }
+
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<?> verUsuario(@PathVariable Integer idUsuario){
+        Usuario usuario = authService.findByIdUsuario(idUsuario);
+        if(usuario != null){
+            return ResponseEntity.status(HttpStatus.FOUND).body(usuario);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+    }
+
+    @GetMapping("/rol/{tipo}")
+    public ResponseEntity<?> listaUsuarioByRol(@PathVariable String tipo){
+        List<Usuario> usuarios = authService.findUsuariosByRol(tipo);
+        if(usuarios != null){
+            return ResponseEntity.status(HttpStatus.FOUND).body(usuarios);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay usuarios con este rol.");
     }
 
     @PostMapping("/login")

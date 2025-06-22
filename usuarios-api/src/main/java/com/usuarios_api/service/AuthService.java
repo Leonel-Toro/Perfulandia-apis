@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class AuthService {
     @Autowired
@@ -39,5 +42,22 @@ public class AuthService {
         usuario.getRoles().add(rol);
         usuarioRepository.save(usuario);
         return usuario;
+    }
+
+    public Usuario findByIdUsuario(Integer idUsuario){
+        Optional<Usuario> usuario = usuarioRepository.findById(idUsuario.longValue());
+        if(usuario.isPresent()){
+            Usuario usuarioEncontrado = usuario.get();
+            return usuarioEncontrado;
+        }
+        return null;
+    }
+
+    public List<Usuario> findUsuariosByRol(String tipoRol){
+        List<Usuario> listaUsuario = usuarioRepository.findByRolesRol(tipoRol);
+        if(listaUsuario!= null){
+            return listaUsuario;
+        }
+        return null;
     }
 }

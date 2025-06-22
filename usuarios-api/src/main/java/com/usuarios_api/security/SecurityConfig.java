@@ -32,11 +32,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // no se usan sesiones, sino tokens JWT
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login","/logout").permitAll() // permitimos solo las rutas necesarias para poder registrarse y acceder
-                        .requestMatchers(HttpMethod.POST, "/").permitAll()
+                        .requestMatchers("/api/usuarios/login",
+                                "/api/usuarios/logout",
+                                "/api/usuarios/"
+                        ).permitAll() // permitimos solo las rutas necesarias para poder registrarse, acceder Y salir
                         .anyRequest().authenticated())
                 .userDetailsService(usuarioDetailsService)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // 🧱 Nuestro filtro personalizado
+                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class) // 🧱 Nuestro filtro personalizado
                 .build();
     }
 

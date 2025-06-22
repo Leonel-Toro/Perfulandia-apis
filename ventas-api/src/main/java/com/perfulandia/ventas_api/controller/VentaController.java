@@ -1,42 +1,51 @@
 package com.perfulandia.ventas_api.controller;
 
 import com.clientes_api.models.ApiResponse;
+import com.perfulandia.ventas_api.models.DetalleVenta;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.models.Venta;
 import com.perfulandia.ventas_api.service.VendedorService;
 import com.perfulandia.ventas_api.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
+
 @RestController
-@RequestMapping("/api/venta")
+@RequestMapping("api/venta")
+@RequiredArgsConstructor
 public class VentaController {
     @Autowired
     private VentaService ventaService;
     @Autowired
     private VendedorService vendedorService;
 
-    @GetMapping("")
-    public ResponseEntity<?> listaVentas(){
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
+    @GetMapping("/")
+    public ResponseEntity<List<Venta>> listaVentas(){
         List<Venta> listaVentas = ventaService.getVentas();
-        if(listaVentas== null) {
-            return ResponseEntity.badRequest().body("No se han encontrado ventas");
+        if(listaVentas.isEmpty()) {
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(listaVentas);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @PostMapping("/nueva")
-    public ResponseEntity<?> nuevaVenta(@RequestBody Venta venta){
+    public ResponseEntity<?> nuevaVenta(@RequestBody Venta venta, DetalleVenta detalleVenta){
         try{
-            Venta nuevaVenta = ventaService.procesarVenta(venta);
+            Venta nuevaVenta = ventaService.procesarVenta(venta,detalleVenta);
             return ResponseEntity.ok(venta);
         }catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(400, e.getMessage()));
@@ -46,11 +55,14 @@ public class VentaController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/cliente/{idCliente}")
     public ResponseEntity<List<Venta>> listaVentasByIdCliente(@PathVariable Long idCliente){
-        return ResponseEntity.ok(ventaService.getVentasByIdCliente(idCliente));
+        List<Venta> ventas = ventaService.getVentasByIdCliente(idCliente);
+        return ResponseEntity.ok(ventas);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/vendedor/{idVendedor}")
     public ResponseEntity<?> listarVentasByVendedor(@PathVariable Long idVendedor) {
         try {

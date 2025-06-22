@@ -1,20 +1,26 @@
 package com.perfulandia.ventas_api.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+import com.perfulandia.ventas_api.dto.InventarioDTO;
+import com.perfulandia.ventas_api.models.DetalleVenta;
+import com.perfulandia.ventas_api.repository.DetalleVentaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.perfulandia.ventas_api.dto.ClienteDTO;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.models.Venta;
 import com.perfulandia.ventas_api.repository.VentaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
 @Service
+@RequiredArgsConstructor
 public class VentaService {
     @Autowired
     private VentaRepository ventaRepository;
@@ -22,7 +28,13 @@ public class VentaService {
     @Autowired
     private ClienteDTOService clienteDTOService;
 
-    public Venta procesarVenta(Venta nuevaVenta){
+    @Autowired
+    private DetalleVentaRepository detalleVentaRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    public Venta procesarVenta(Venta nuevaVenta, DetalleVenta detalleVenta){
         try {
             ClienteDTO cliente = clienteDTOService.findById(nuevaVenta.getIdCliente());
             if (cliente == null) {
@@ -41,25 +53,50 @@ public class VentaService {
                 throw new IllegalArgumentException("El total no puede ser nulo, negativo o cero.");
             }
 
-            return ventaRepository.save(nuevaVenta);
+            if(detalleVenta.getIdProducto() == null || detalleVenta.getIdProducto().equals("")){
+                throw new IllegalArgumentException("El producto no puede ser vacio.");
+            }
 
+            if(detalleVenta.getCantidad() > 0){
+                throw new IllegalArgumentException("La cantidad debe ser mayor a 0");
+            }
+
+            if(detalleVenta.getPrecioUnitario() == null || detalleVenta.getPrecioUnitario().compareTo(BigDecimal.ZERO) <= 0){
+                throw new IllegalArgumentException("El precio unitario debe ser mayor a 0.");
+            }
+            BigDecimal total = detalleVenta.getPrecioUnitario().multiply(BigDecimal.valueOf(detalleVenta.getCantidad()));
+            nuevaVenta.setTotal(total);
+
+            try {
+                restTemplate.put(
+                        "http://localhost:8084/api/inventario/ajustar",
+                        new InventarioDTO(detalleVenta.getIdProducto(), detalleVenta.getCantidad())
+                );
+            }catch (HttpStatusCodeException e) {
+                System.err.println("Error HTTP al ajustar inventario: " + e.getStatusCode());
+                System.err.println("Respuesta del servidor: " + e.getResponseBodyAsString());
+                throw new RuntimeException("No se pudo ajustar el inventario: " + e.getMessage(), e);
+            }
+            ventaRepository.save(nuevaVenta);
+            detalleVenta.setVenta(nuevaVenta);
+            detalleVentaRepository.save(detalleVenta);
         } catch (Exception e) {
             throw new RuntimeException("Error al procesar la venta: " + e.getMessage(), e);
         }
+        return nuevaVenta;
     }
 
-    public List<Venta> getVentas(){
+    public List<Venta> getVentas() {
         return ventaRepository.findAll();
     }
 
-    public Venta findById(Long id){
+    public Venta findById(Long id) {
         Optional<Venta> venta = ventaRepository.findById(id);
         return venta.orElse(null);
     }
 
     public List<Venta> getVentasByIdCliente(Long idCliente) {
-        List<Venta> ventasCliente = ventaRepository.findByIdCliente(idCliente);
-        return ventasCliente;
+        return ventaRepository.findByIdCliente(idCliente);
     }
 
     public List<Venta> getVentasByIdVendedor(Vendedor vendedor){

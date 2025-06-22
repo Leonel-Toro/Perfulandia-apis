@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtService {
@@ -23,8 +25,13 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         Key key = Keys.hmacShaKeyFor(secretPass.getBytes(StandardCharsets.UTF_8));
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(auth -> auth.getAuthority().replace("ROLE_", ""))
+                .collect(Collectors.toList());
+
         return Jwts.builder()
                 .setSubject(userDetails.getUsername()) // en nuestro caso: correo
+                .claim("roles", roles) // se agregan los roles en el token
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(SignatureAlgorithm.HS512, key)

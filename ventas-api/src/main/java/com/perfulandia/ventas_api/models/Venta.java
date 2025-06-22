@@ -13,10 +13,11 @@ public class Venta {
     @Column(name = "id")
     private Long idVenta;
     private Date fecha;
+    @Transient
     private BigDecimal total;
     @Column(name = "cliente_id")
     private Integer idCliente;
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "vendedor_id")
     private Vendedor vendedor;
 

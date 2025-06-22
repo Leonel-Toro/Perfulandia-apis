@@ -27,11 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("➡️ Método ejecutado: " + request.getMethod() + " | URI: " + request.getRequestURI());
-        if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/logout")) {
-            filterChain.doFilter(request, response); // omite validación
-            return;
-        }
+
         final String authHeader = request.getHeader("Authorization");
         String jwt = null;
         String correo = null;
