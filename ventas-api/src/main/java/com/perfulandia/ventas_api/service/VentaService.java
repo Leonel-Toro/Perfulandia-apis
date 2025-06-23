@@ -9,8 +9,10 @@ import com.perfulandia.ventas_api.models.DetalleVenta;
 import com.perfulandia.ventas_api.repository.DetalleVentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.perfulandia.ventas_api.dto.ClienteDTO;
+import com.perfulandia.ventas_api.dto.EnvioRequest;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.models.Venta;
 import com.perfulandia.ventas_api.repository.VentaRepository;
@@ -22,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class VentaService {
+
     @Autowired
     private VentaRepository ventaRepository;
 
@@ -49,10 +52,6 @@ public class VentaService {
                 throw new IllegalArgumentException("La fecha no puede estar vacía.");
             }
 
-            if (nuevaVenta.getTotal() == null || nuevaVenta.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
-                throw new IllegalArgumentException("El total no puede ser nulo, negativo o cero.");
-            }
-
             if(detalleVenta.getIdProducto() == null || detalleVenta.getIdProducto().equals("")){
                 throw new IllegalArgumentException("El producto no puede ser vacio.");
             }
@@ -67,6 +66,14 @@ public class VentaService {
             BigDecimal total = detalleVenta.getPrecioUnitario().multiply(BigDecimal.valueOf(detalleVenta.getCantidad()));
             nuevaVenta.setTotal(total);
 
+            // Crear y enviar el envío al microservicio de envíos
+            EnvioRequest envio = new EnvioRequest();
+            envio.setEstado("Pendiente");
+            envio.setFecha(ventaGuardada.getFecha());
+            envio.setTransportista("Por asignar");
+            envio.setTracking("En proceso");
+            envio.setDireccion(cliente.getDireccion());
+
             try {
                 restTemplate.put(
                         "http://localhost:8084/api/inventario/ajustar",
@@ -77,6 +84,13 @@ public class VentaService {
                 System.err.println("Respuesta del servidor: " + e.getResponseBodyAsString());
                 throw new RuntimeException("No se pudo ajustar el inventario: " + e.getMessage(), e);
             }
+
+            try {
+                restTemplate.postForEntity("http://localhost:8080/envios/", envio, Void.class);
+            } catch (Exception e) {
+                System.err.println("Error al registrar el envío: " + e.getMessage());
+            }
+
             ventaRepository.save(nuevaVenta);
             detalleVenta.setVenta(nuevaVenta);
             detalleVentaRepository.save(detalleVenta);
@@ -100,7 +114,6 @@ public class VentaService {
     }
 
     public List<Venta> getVentasByIdVendedor(Vendedor vendedor){
-        List<Venta> ventasVendedor = ventaRepository.findByVendedor(vendedor);
-        return ventasVendedor;
+        return ventaRepository.findByVendedor(vendedor);
     }
 }

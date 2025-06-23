@@ -20,6 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.clientes_api.models.ApiResponse;
+import com.perfulandia.ventas_api.models.Vendedor;
+import com.perfulandia.ventas_api.models.Venta;
+import com.perfulandia.ventas_api.service.VendedorService;
+import com.perfulandia.ventas_api.service.VentaService;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -78,5 +84,4 @@ public class VentaController {
                     .body(new ApiResponse(500, "Error al obtener ventas: " + e.getMessage()));
         }
     }
-
 }

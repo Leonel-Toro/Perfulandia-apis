@@ -50,7 +50,7 @@ public class ClienteController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/{idCliente}")
     public ResponseEntity<Cliente> getClienteById(@PathVariable Integer idCliente){
         Cliente cliente = clienteService.getById(idCliente);

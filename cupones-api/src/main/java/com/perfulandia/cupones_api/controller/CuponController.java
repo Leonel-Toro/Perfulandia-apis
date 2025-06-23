@@ -23,6 +23,7 @@ public class CuponController {
     @Autowired
     private CuponServices cuponServices;
 
+    
     @GetMapping
     public List<Cupon> getAll() {
         return cuponServices.getAll();
