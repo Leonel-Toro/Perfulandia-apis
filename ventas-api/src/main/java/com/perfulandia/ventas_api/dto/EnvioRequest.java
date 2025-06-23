@@ -1,21 +1,51 @@
 package com.perfulandia.ventas_api.dto;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class EnvioRequest {
     private String direccion;
-    private String ciudad;
-    private String codigoPostal;
-    private String estadoEnvio;
-    private LocalDate fechaEnvio;
-    private Long ventaId;
+    private String estado;
+    private Date fecha;
+    private String transportista;
+    private String tracking;
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getTransportista() {
+        return transportista;
+    }
+
+    public void setTransportista(String transportista) {
+        this.transportista = transportista;
+    }
+
+    public String getTracking() {
+        return tracking;
+    }
+
+    public void setTracking(String tracking) {
+        this.tracking = tracking;
+    }
 }

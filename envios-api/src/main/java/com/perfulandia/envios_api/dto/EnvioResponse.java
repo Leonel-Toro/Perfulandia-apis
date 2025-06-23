@@ -1,4 +1,4 @@
-package com.perfulandia.ventas_api.dto;
+package com.perfulandia.envios_api.dto;
 
 import java.sql.Date;
 
@@ -12,7 +12,4 @@ public class EnvioResponse {
     private String transportista;
     private String tracking;
     private String direccion;
-
-
-
 }

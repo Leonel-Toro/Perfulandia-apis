@@ -1,0 +1,63 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "SoporteApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.soporte_api.SoporteApiApplication",
+            "projectName": "soporte-api"
+        },
+        {
+            "type": "java",
+            "name": "ProductosApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.productos_api.ProductosApiApplication",
+            "projectName": "productos-api"
+        },
+        {
+            "type": "java",
+            "name": "ClientesApiApplication",
+            "request": "launch",
+            "mainClass": "com.clientes_api.ClientesApiApplication",
+            "projectName": "clientes-api"
+        },
+        {
+            "type": "java",
+            "name": "CuponesApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.cupones_api.CuponesApiApplication",
+            "projectName": "cupones-api"
+        },
+        {
+            "type": "java",
+            "name": "EnviosApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.envios_api.EnviosApiApplication",
+            "projectName": "envios-api"
+        },
+        {
+            "type": "java",
+            "name": "VentasApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.ventas_api.VentasApiApplication",
+            "projectName": "ventas-api"
+        },
+        {
+            "type": "java",
+            "name": "UsuariosApiApplication",
+            "request": "launch",
+            "mainClass": "com.usuarios_api.UsuariosApiApplication",
+            "projectName": "usuarios-api"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ApiGatewayApplication<api-gateway>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.perfulandia.api_gateway.ApiGatewayApplication",
+            "projectName": "api-gateway",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
