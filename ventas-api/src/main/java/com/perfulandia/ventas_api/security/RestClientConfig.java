@@ -1,6 +1,5 @@
 package com.perfulandia.ventas_api.security;
 
-import com.clientes_api.security.JwtRestTemplateInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
