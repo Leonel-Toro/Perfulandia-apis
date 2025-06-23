@@ -1,7 +1,12 @@
 package com.perfulandia.soporte_api.controllers;
 
+import com.perfulandia.soporte_api.DTO.CreacionTicketDTO;
 import com.perfulandia.soporte_api.Model.Ticket;
 import com.perfulandia.soporte_api.services.TicketService;
+
+// import io.swagger.v3.oas.models.responses.ApiResponse;
+
+// import io.swagger.v3.oas.models.responses.ApiResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,9 +50,15 @@ public class TicketController {
 
     // Crear un nuevo ticket (POST)
     @PostMapping({"", "/"})
-    public ResponseEntity<?> add(@RequestBody Ticket ticket) {
-        Ticket nuevoTicket = ticketService.add(ticket);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoTicket);
+    public ResponseEntity<?> creacionTicket(@RequestBody Ticket ticket) {
+        try {
+            Ticket nuevoTicket = ticketService.add(ticket);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoTicket);
+        } catch (Exception e) {
+            // Si quieres controlar errores también
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al crear el ticket: " + e.getMessage());
+        }
     }
 
     // Actualizar un ticket existente (PUT)
