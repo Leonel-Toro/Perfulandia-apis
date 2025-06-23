@@ -34,7 +34,10 @@ public class ClienteController {
         } catch (Exception ex) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse(400, ex.getMessage()));
-        }
+
+    }
+
+
     }
     @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     @PutMapping("/{idCliente}")

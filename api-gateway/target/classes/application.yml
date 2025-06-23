@@ -44,10 +44,17 @@ spring:
             predicates:
               - Path=/api/usuarios/**
 
+
+          - id: envios-api
+            uri: http://localhost:8086
+            predicates:
+              - Path=/**
+
+
           - id: cupones-api
             uri: http://localhost:8087
             predicates:
-              - Path=/api/cupones/**
+              - Path=/**
 
 logging:
   level:
