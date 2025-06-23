@@ -49,10 +49,6 @@ public class VentaService {
                 throw new IllegalArgumentException("La fecha no puede estar vacía.");
             }
 
-            if (nuevaVenta.getTotal() == null || nuevaVenta.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
-                throw new IllegalArgumentException("El total no puede ser nulo, negativo o cero.");
-            }
-
             if(detalleVenta.getIdProducto() == null || detalleVenta.getIdProducto().equals("")){
                 throw new IllegalArgumentException("El producto no puede ser vacio.");
             }
