@@ -69,7 +69,7 @@ public class VentaService {
             // Crear y enviar el envío al microservicio de envíos
             EnvioRequest envio = new EnvioRequest();
             envio.setEstado("Pendiente");
-            envio.setFecha(ventaGuardada.getFecha());
+            envio.setFecha(nuevaVenta.getFecha());
             envio.setTransportista("Por asignar");
             envio.setTracking("En proceso");
             envio.setDireccion(cliente.getDireccion());
