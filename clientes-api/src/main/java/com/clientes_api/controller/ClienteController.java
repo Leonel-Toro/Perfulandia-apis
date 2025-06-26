@@ -9,6 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+
 
 import java.util.*;
 
@@ -64,4 +69,40 @@ public class ClienteController {
     public void clientePreferencia(@PathVariable Integer idCliente){
         return;
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
+    @GetMapping("/hateoas/{idCliente}")
+    public ResponseEntity<EntityModel<Cliente>> getClienteByIdHateoas(@PathVariable Integer idCliente) {
+    Cliente cliente = clienteService.getById(idCliente);
+
+    EntityModel<Cliente> clienteModel = EntityModel.of(cliente,
+        linkTo(methodOn(ClienteController.class).getClienteByIdHateoas(idCliente)).withSelfRel(),
+        linkTo(methodOn(ClienteController.class).getAllHateoas()).withRel("todos-los-clientes"),
+        linkTo(methodOn(ClienteController.class).actualizarClienteId(idCliente, null)).withRel("actualizar-cliente")
+    );
+
+    return ResponseEntity.ok(clienteModel);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/hateoas/lista")
+    public ResponseEntity<CollectionModel<EntityModel<Cliente>>> getAllHateoas() {
+    List<Cliente> clientes = clienteService.getAll();
+
+    List<EntityModel<Cliente>> clientesModel = new ArrayList<>();
+
+    for (Cliente cliente : clientes) {
+        EntityModel<Cliente> model = EntityModel.of(cliente,
+            linkTo(methodOn(ClienteController.class).getClienteByIdHateoas(cliente.getId() != null ? cliente.getId().intValue() : null)).withSelfRel()
+        );
+        clientesModel.add(model);
+    }
+
+    CollectionModel<EntityModel<Cliente>> collectionModel = CollectionModel.of(clientesModel,
+        linkTo(methodOn(ClienteController.class).getAllHateoas()).withSelfRel()
+    );
+
+    return ResponseEntity.ok(collectionModel);
+    }
+
 }
