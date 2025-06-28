@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ClientesApiApplication",
+            "request": "launch",
+            "mainClass": "com.clientes_api.ClientesApiApplication",
+            "projectName": "com.perfulandia-clientes-api"
+        },
+        {
+            "type": "java",
             "name": "SoporteApiApplication",
             "request": "launch",
             "mainClass": "com.perfulandia.soporte_api.SoporteApiApplication",

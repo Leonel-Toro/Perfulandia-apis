@@ -1,33 +1,47 @@
 package com.clientes_api.models;
 
 public class ApiResponse {
-    //200 OK
-    //400 ERROR
-    //500 NO ENCONTRADO
-    private int codigo;
-    private String mensaje;
+    private int status;
+    private String message;
+    private Object data;
 
-    public ApiResponse() {
+    // Constructor
+    public ApiResponse(int status, String message) {
+        this.status = status;
+        this.message = message;
+        this.data = null;
     }
 
-    public ApiResponse(int codigo, String mensaje) {
-        this.codigo = codigo;
-        this.mensaje = mensaje;
+    public ApiResponse(int status, String message, Object data) {
+            this.status = status;
+            this.message = message;
+            this.data = data;
+        }
+
+    // Getters
+    public int getStatus() {
+        return status;
     }
 
-    public int getCodigo() {
-        return codigo;
+    public String getMessage() {
+        return message;
     }
 
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+    public Object getData() {
+        return data;
     }
 
-    public String getMensaje() {
-        return mensaje;
+    // Setters
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }
+

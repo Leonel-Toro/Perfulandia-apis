@@ -8,8 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -54,5 +57,37 @@ public class ProductoController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(400,"No se han encontrado productos con esa categoria."));
     }
+
+    //Metodos HATEOAS
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
+    @GetMapping("/hateoas/listaProductos")
+    public ResponseEntity<CollectionModel<EntityModel<Producto>>> listaProductosHateoas() {
+        List<EntityModel<Producto>> productos = productoService.verProductos().stream()
+        .map(prod -> (EntityModel<Producto>) EntityModel.of(prod,
+            linkTo(methodOn(ProductoController.class).verProducto(prod.getId())).withRel("ver-detalle"),
+            linkTo(methodOn(ProductoController.class).productosPorNombreCategoria(prod.getCategoria().getId())).withRel("productos-misma-categoria")
+        ))
+        .collect(Collectors.toList());
+
+    return ResponseEntity.ok(CollectionModel.of(productos,
+        linkTo(methodOn(ProductoController.class).listaProductosHateoas()).withSelfRel()
+    ));
+}
+
+    @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
+    @GetMapping("/hateoas/{idProducto}")
+    public ResponseEntity<EntityModel<Producto>> verProductoHateoas(@PathVariable Long idProducto) {
+    Producto producto = productoService.productoPorId(idProducto);
+    if (producto == null)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+    EntityModel<Producto> model = EntityModel.of(producto,
+        linkTo(methodOn(ProductoController.class).verProductoHateoas(idProducto)).withSelfRel(),
+        linkTo(methodOn(ProductoController.class).listaProductosHateoas()).withRel("lista-productos")
+    );
+
+    return ResponseEntity.ok(model);
+    }
+
 
 }
