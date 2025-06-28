@@ -8,6 +8,8 @@ import com.usuarios_api.service.AuthService;
 import com.usuarios_api.security.JwtService;
 import com.usuarios_api.service.UsuarioDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +19,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -86,5 +91,58 @@ public class AuthController {
     public ResponseEntity<AuthResponse> logout() {
         System.out.println("➡️ Ejecutando LOGOUT");
         return ResponseEntity.ok(new AuthResponse("Sesión cerrada correctamente"));
+    }
+
+    @GetMapping("/hateoas/usuario/{idUsuario}")
+    public ResponseEntity<EntityModel<Usuario>> verUsuarioHateoas(@PathVariable Integer idUsuario) {
+    try {
+        Usuario usuario = authService.findByIdUsuario(idUsuario);
+
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        
+        // Obtener el primer rol del usuario, o "sin-rol" si no tiene roles asignados
+        String rol = usuario.getRoles().stream()
+            .map(r -> r.getRol())
+            .findFirst()
+            .orElse("sin-rol");
+
+        EntityModel<Usuario> usuarioResource = EntityModel.of(usuario,
+            linkTo(methodOn(AuthController.class).verUsuarioHateoas(idUsuario)).withSelfRel(),
+            linkTo(methodOn(AuthController.class).listaUsuarioByRolHateoas(rol)).withRel("usuarios-del-mismo-rol")
+        );
+
+        return ResponseEntity.ok(usuarioResource);
+
+    } catch (RuntimeException ex) {
+        return ResponseEntity.badRequest().build();
+    }
+    }
+
+    // Endpoint para obtener usuarios por rol con HATEOAS
+    @GetMapping("/hateoas/rol/{tipo}")
+    public ResponseEntity<CollectionModel<EntityModel<Usuario>>> listaUsuarioByRolHateoas(@PathVariable String tipo) {
+    List<Usuario> usuarios = authService.findUsuariosByRol(tipo);
+
+    if (usuarios == null || usuarios.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(CollectionModel.empty());
+    }
+
+    List<EntityModel<Usuario>> usuariosModel = usuarios.stream().map(usuario -> {
+        Integer id = usuario.getId().intValue();
+
+        return EntityModel.of(usuario,
+            linkTo(methodOn(AuthController.class).verUsuarioHateoas(id)).withSelfRel(),
+            linkTo(methodOn(AuthController.class).listaUsuarioByRolHateoas(tipo)).withRel("usuarios-del-mismo-rol")
+        );
+    }).toList();
+
+    CollectionModel<EntityModel<Usuario>> collectionModel = CollectionModel.of(usuariosModel,
+        linkTo(methodOn(AuthController.class).listaUsuarioByRolHateoas(tipo)).withSelfRel()
+    );
+
+    return ResponseEntity.ok(collectionModel);
     }
 }
