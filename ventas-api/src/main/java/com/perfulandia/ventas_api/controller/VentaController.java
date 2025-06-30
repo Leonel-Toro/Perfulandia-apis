@@ -1,6 +1,7 @@
 package com.perfulandia.ventas_api.controller;
 
 import com.clientes_api.models.ApiResponse;
+import com.perfulandia.ventas_api.dto.NuevaVentaDTO;
 import com.perfulandia.ventas_api.models.DetalleVenta;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.models.Venta;
@@ -49,10 +50,10 @@ public class VentaController {
 
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @PostMapping("/nueva")
-    public ResponseEntity<?> nuevaVenta(@RequestBody Venta venta, DetalleVenta detalleVenta){
+    public ResponseEntity<?> nuevaVenta(@RequestBody NuevaVentaDTO nuevaVentaDTO){
         try{
-            Venta nuevaVenta = ventaService.procesarVenta(venta,detalleVenta);
-            return ResponseEntity.ok(venta);
+            NuevaVentaDTO nuevaVenta = ventaService.procesarVenta(nuevaVentaDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(200,"Se ha realizado la venta con exito."));
         }catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(400, e.getMessage()));
         } catch (RuntimeException e) {

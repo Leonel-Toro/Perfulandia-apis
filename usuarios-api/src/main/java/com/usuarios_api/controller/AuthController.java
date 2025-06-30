@@ -41,7 +41,8 @@ public class AuthController {
     public ResponseEntity<?> registrarUsuario(@RequestBody RegistroUsuarioRequest request) {
         try {
             Usuario nuevoUsuario = authService.registrarUsuario(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new AuthResponse(201,"Se ha creado nuevo usuario.","Correo: "+nuevoUsuario.getCorreo()));
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
@@ -76,15 +77,15 @@ public class AuthController {
             UserDetails userDetails = userDetailsService.loadUserByUsername(request.getCorreo());
             String jwt = jwtService.generateToken(userDetails);
 
-            return ResponseEntity.ok(new AuthResponse(jwt));
+            return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(200,"Se ha iniciado sesión.", jwt));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Credenciales inválidas."));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse(401,"Credenciales inválidas."));
         }
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<AuthResponse> logout() {
+    public ResponseEntity<?> logout() {
         System.out.println("➡️ Ejecutando LOGOUT");
-        return ResponseEntity.ok(new AuthResponse("Sesión cerrada correctamente"));
+        return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(200,"Sesión cerrada correctamente"));
     }
 }
