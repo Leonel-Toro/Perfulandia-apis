@@ -4,25 +4,22 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import com.perfulandia.ventas_api.dto.InventarioDTO;
-import com.perfulandia.ventas_api.models.DetalleVenta;
-import com.perfulandia.ventas_api.repository.DetalleVentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.perfulandia.ventas_api.dto.ClienteDTO;
+import com.perfulandia.ventas_api.dto.CuponRequestDTO;
+import com.perfulandia.ventas_api.dto.CuponResponseDTO;
 import com.perfulandia.ventas_api.dto.EnvioRequest;
+import com.perfulandia.ventas_api.dto.InventarioDTO;
+import com.perfulandia.ventas_api.models.DetalleVenta;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.models.Venta;
+import com.perfulandia.ventas_api.repository.DetalleVentaRepository;
 import com.perfulandia.ventas_api.repository.VentaRepository;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
-
 @Service
-@RequiredArgsConstructor
 public class VentaService {
 
     @Autowired
@@ -37,66 +34,76 @@ public class VentaService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Venta procesarVenta(Venta nuevaVenta, DetalleVenta detalleVenta){
-        try {
-            ClienteDTO cliente = clienteDTOService.findById(nuevaVenta.getIdCliente());
-            if (cliente == null) {
-                throw new IllegalArgumentException("Cliente no asignado.");
-            }
+    public Venta procesarVenta(Venta nuevaVenta, DetalleVenta detalleVenta) {
 
-            if (nuevaVenta.getVendedor() == null) {
-                throw new IllegalArgumentException("Vendedor no asignado.");
-            }
-
-            if (nuevaVenta.getFecha() == null) {
-                throw new IllegalArgumentException("La fecha no puede estar vacía.");
-            }
-
-            if(detalleVenta.getIdProducto() == null || detalleVenta.getIdProducto().equals("")){
-                throw new IllegalArgumentException("El producto no puede ser vacio.");
-            }
-
-            if(detalleVenta.getCantidad() > 0){
-                throw new IllegalArgumentException("La cantidad debe ser mayor a 0");
-            }
-
-            if(detalleVenta.getPrecioUnitario() == null || detalleVenta.getPrecioUnitario().compareTo(BigDecimal.ZERO) <= 0){
-                throw new IllegalArgumentException("El precio unitario debe ser mayor a 0.");
-            }
-            BigDecimal total = detalleVenta.getPrecioUnitario().multiply(BigDecimal.valueOf(detalleVenta.getCantidad()));
-            nuevaVenta.setTotal(total);
-
-            // Crear y enviar el envío al microservicio de envíos
-            EnvioRequest envio = new EnvioRequest();
-            envio.setEstado("Pendiente");
-            envio.setFecha(nuevaVenta.getFecha());
-            envio.setTransportista("Por asignar");
-            envio.setTracking("En proceso");
-            envio.setDireccion(cliente.getDireccion());
-
-            try {
-                restTemplate.put(
-                        "http://localhost:8084/api/inventario/ajustar",
-                        new InventarioDTO(detalleVenta.getIdProducto(), detalleVenta.getCantidad())
-                );
-            }catch (HttpStatusCodeException e) {
-                System.err.println("Error HTTP al ajustar inventario: " + e.getStatusCode());
-                System.err.println("Respuesta del servidor: " + e.getResponseBodyAsString());
-                throw new RuntimeException("No se pudo ajustar el inventario: " + e.getMessage(), e);
-            }
-
-            try {
-                restTemplate.postForEntity("http://localhost:8080/envios/", envio, Void.class);
-            } catch (Exception e) {
-                System.err.println("Error al registrar el envío: " + e.getMessage());
-            }
-
-            ventaRepository.save(nuevaVenta);
-            detalleVenta.setVenta(nuevaVenta);
-            detalleVentaRepository.save(detalleVenta);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al procesar la venta: " + e.getMessage(), e);
+        ClienteDTO cliente = clienteDTOService.findById(nuevaVenta.getIdCliente());
+        if (cliente == null) {
+            throw new IllegalArgumentException("Cliente no asignado.");
         }
+
+        if (nuevaVenta.getVendedor() == null) {
+            throw new IllegalArgumentException("Vendedor no asignado.");
+        }
+
+        if (nuevaVenta.getFecha() == null) {
+            throw new IllegalArgumentException("La fecha no puede estar vacía.");
+        }
+
+        if (detalleVenta.getIdProducto() == null) {
+            throw new IllegalArgumentException("El producto no puede ser vacío.");
+        }
+
+        if (detalleVenta.getCantidad() <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor a 0.");
+        }
+
+        if (detalleVenta.getPrecioUnitario() == null || detalleVenta.getPrecioUnitario().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("El precio unitario debe ser mayor a 0.");
+        }
+
+        BigDecimal total = detalleVenta.getPrecioUnitario().multiply(BigDecimal.valueOf(detalleVenta.getCantidad()));
+
+        if (nuevaVenta.getCodigoCupon() != null && !nuevaVenta.getCodigoCupon().isEmpty()) {
+            CuponRequestDTO requestDTO = new CuponRequestDTO(nuevaVenta.getCodigoCupon());
+
+            CuponResponseDTO responseDTO = restTemplate.postForObject(
+                "http://localhost:8082/api/cupones/validar",
+                requestDTO,
+                CuponResponseDTO.class
+            );
+
+            if (responseDTO == null || !responseDTO.isValido()) {
+                throw new IllegalArgumentException("Cupón inválido o expirado.");
+            }
+
+            BigDecimal descuento = responseDTO.getDescuento();
+            total = total.subtract(total.multiply(descuento));
+
+            if (total.compareTo(BigDecimal.ZERO) < 0) {
+                total = BigDecimal.ZERO;
+            }
+        }
+
+        nuevaVenta.setTotal(total);
+
+        restTemplate.put(
+            "http://localhost:8084/api/inventario/ajustar",
+            new InventarioDTO(detalleVenta.getIdProducto(), detalleVenta.getCantidad())
+        );
+
+        EnvioRequest envio = new EnvioRequest();
+        envio.setEstado("Pendiente");
+        envio.setFecha(nuevaVenta.getFecha());
+        envio.setTransportista("Por asignar");
+        envio.setTracking("En proceso");
+        envio.setDireccion(cliente.getDireccion());
+
+        restTemplate.postForEntity("http://localhost:8080/envios/", envio, Void.class);
+
+        ventaRepository.save(nuevaVenta);
+        detalleVenta.setVenta(nuevaVenta);
+        detalleVentaRepository.save(detalleVenta);
+
         return nuevaVenta;
     }
 
@@ -113,7 +120,7 @@ public class VentaService {
         return ventaRepository.findByIdCliente(idCliente);
     }
 
-    public List<Venta> getVentasByIdVendedor(Vendedor vendedor){
+    public List<Venta> getVentasByIdVendedor(Vendedor vendedor) {
         return ventaRepository.findByVendedor(vendedor);
     }
 }
