@@ -3,7 +3,15 @@ package com.perfulandia.ventas_api.models;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "ventas")
@@ -12,17 +20,26 @@ public class Venta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long idVenta;
+
     private Date fecha;
+
     @Transient
     private BigDecimal total;
+
+    @Transient
+    private String codigoCupon; 
+
     @Column(name = "cliente_id")
     private Integer idCliente;
+
     @ManyToOne()
     @JoinColumn(name = "vendedor_id")
     private Vendedor vendedor;
 
+
     public Venta() {
     }
+
 
     public Long getIdVenta() {
         return idVenta;
@@ -46,6 +63,14 @@ public class Venta {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public String getCodigoCupon() {
+        return codigoCupon;
+    }
+
+    public void setCodigoCupon(String codigoCupon) {
+        this.codigoCupon = codigoCupon;
     }
 
     public Integer getIdCliente() {

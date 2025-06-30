@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,30 +25,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clientes_api.models.ApiResponse;
+import com.perfulandia.ventas_api.dto.VentaRequestDTO;
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.models.Venta;
 import com.perfulandia.ventas_api.service.VendedorService;
 import com.perfulandia.ventas_api.service.VentaService;
 
-import lombok.RequiredArgsConstructor;
-
 @RestController
-@RequestMapping("api/venta")
-@RequiredArgsConstructor
+@RequestMapping("/api/venta")
 public class VentaController {
+
     @Autowired
     private VentaService ventaService;
+
     @Autowired
     private VendedorService vendedorService;
 
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/")
-    public ResponseEntity<List<Venta>> listaVentas(){
-        List<Venta> listaVentas = ventaService.getVentas();
-        if(listaVentas.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(listaVentas);
+    public ResponseEntity<List<Venta>> listaVentas() {
+        List<Venta> ventas = ventaService.getVentas();
+        return ventas.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(ventas);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
@@ -57,14 +57,14 @@ public class VentaController {
         }catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(400, e.getMessage()));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest()
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse(500, "Error interno: " + e.getMessage()));
         }
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/cliente/{idCliente}")
-    public ResponseEntity<List<Venta>> listaVentasByIdCliente(@PathVariable Long idCliente){
+    public ResponseEntity<?> listaVentasByIdCliente(@PathVariable Long idCliente) {
         List<Venta> ventas = ventaService.getVentasByIdCliente(idCliente);
         return ResponseEntity.ok(ventas);
     }
@@ -72,17 +72,12 @@ public class VentaController {
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/vendedor/{idVendedor}")
     public ResponseEntity<?> listarVentasByVendedor(@PathVariable Long idVendedor) {
-        try {
-            Vendedor vendedor = vendedorService.getById(idVendedor);
-            if(vendedor == null){
-                return ResponseEntity.badRequest().body(new ApiResponse(400, "Vendedor no encontrado."));
-            }
-
-            List<Venta> ventas = ventaService.getVentasByIdVendedor(vendedor);
-            return ResponseEntity.ok(ventas);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse(500, "Error al obtener ventas: " + e.getMessage()));
+        Vendedor vendedor = vendedorService.getById(idVendedor);
+        if (vendedor == null) {
+            return ResponseEntity.badRequest().body(new ApiResponse(400, "Vendedor no encontrado."));
         }
+
+        List<Venta> ventas = ventaService.getVentasByIdVendedor(vendedor);
+        return ResponseEntity.ok(ventas);
     }
 }

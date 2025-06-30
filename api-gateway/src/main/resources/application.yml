@@ -37,7 +37,7 @@ spring:
           - id: envios-api
             uri: http://localhost:8086
             predicates:
-              - Path=/envios/**
+              - Path=/api/envios/**
 
           - id: usuarios-api
             uri: http://localhost:8081

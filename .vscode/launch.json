@@ -2,6 +2,55 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SoporteApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.soporte_api.SoporteApiApplication",
+            "projectName": "personas-api-spring-boot"
+        },
+        {
+            "type": "java",
+            "name": "EnviosApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.envios_api.EnviosApiApplication",
+            "projectName": "com.personas-personas-api-spring-boot"
+        },
+        {
+            "type": "java",
+            "name": "ProductosApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.productos_api.ProductosApiApplication",
+            "projectName": "com.perfulandia-productos-api"
+        },
+        {
+            "type": "java",
+            "name": "CuponesApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.cupones_api.CuponesApiApplication",
+            "projectName": "com.perfulandia-cupones-api"
+        },
+        {
+            "type": "java",
+            "name": "VentasApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.ventas_api.VentasApiApplication",
+            "projectName": "com.perfulandia-ventas-api"
+        },
+        {
+            "type": "java",
+            "name": "UsuariosApiApplication",
+            "request": "launch",
+            "mainClass": "com.usuarios_api.UsuariosApiApplication",
+            "projectName": "com.perfulandia-usuarios-api"
+        },
+        {
+            "type": "java",
+            "name": "ApiGatewayApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.api_gateway.ApiGatewayApplication",
+            "projectName": "com.perfulandia-api-gateway"
+        },
+        {
+            "type": "java",
             "name": "ClientesApiApplication",
             "request": "launch",
             "mainClass": "com.clientes_api.ClientesApiApplication",

@@ -13,14 +13,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.perfulandia.ventas_api.models.Vendedor;
 import com.perfulandia.ventas_api.models.Venta;
+import com.perfulandia.ventas_api.repository.DetalleVentaRepository;
 import com.perfulandia.ventas_api.repository.VentaRepository;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
-
 @Service
-@RequiredArgsConstructor
 public class VentaService {
 
     @Autowired
@@ -117,7 +113,7 @@ public class VentaService {
         return ventaRepository.findByIdCliente(idCliente);
     }
 
-    public List<Venta> getVentasByIdVendedor(Vendedor vendedor){
+    public List<Venta> getVentasByIdVendedor(Vendedor vendedor) {
         return ventaRepository.findByVendedor(vendedor);
     }
 }
