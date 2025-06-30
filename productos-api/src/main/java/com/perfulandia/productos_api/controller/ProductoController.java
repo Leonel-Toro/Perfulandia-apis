@@ -1,5 +1,6 @@
 package com.perfulandia.productos_api.controller;
 
+import com.perfulandia.productos_api.dto.ProductoInventarioDTO;
 import com.perfulandia.productos_api.models.ApiResponse;
 import com.perfulandia.productos_api.models.Producto;
 import com.perfulandia.productos_api.service.ProductoService;
@@ -24,7 +25,7 @@ public class ProductoController {
     }
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @PostMapping("/nuevoProducto")
-    public ResponseEntity<?> ingresarNuevoProducto(@RequestBody Producto nuevoProducto){
+    public ResponseEntity<?> ingresarNuevoProducto(@RequestBody ProductoInventarioDTO nuevoProducto){
         try{
             Producto producto = productoService.nuevoProducto(nuevoProducto);
             if(producto != null){
@@ -40,7 +41,7 @@ public class ProductoController {
     @GetMapping("/{idProducto}")
     public ResponseEntity<?> verProducto(@PathVariable Long idProducto){
         if(productoService.productoPorId(idProducto) != null){
-            return ResponseEntity.status(HttpStatus.FOUND).body(productoService.productoPorId(idProducto));
+            return ResponseEntity.status(HttpStatus.OK).body(productoService.productoPorId(idProducto));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(400, "No existe ese producto."));
     }
