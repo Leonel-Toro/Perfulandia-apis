@@ -52,7 +52,7 @@ public class VentaService {
                 throw new IllegalArgumentException("La fecha no puede estar vacía.");
             }
 
-            if(detalleVenta.getIdProducto() == null || detalleVenta.getIdProducto().equals("")){
+            if(detalleVenta.getIdProducto() == null){
                 throw new IllegalArgumentException("El producto no puede ser vacio.");
             }
 
