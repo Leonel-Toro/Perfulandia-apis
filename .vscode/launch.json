@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "SoporteApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.soporte_api.SoporteApiApplication",
+            "projectName": "personas-api-spring-boot"
+        },
+        {
+            "type": "java",
+            "name": "EnviosApiApplication",
+            "request": "launch",
+            "mainClass": "com.perfulandia.envios_api.EnviosApiApplication",
+            "projectName": "com.personas-personas-api-spring-boot"
+        },
+        {
+            "type": "java",
             "name": "ProductosApiApplication",
             "request": "launch",
             "mainClass": "com.perfulandia.productos_api.ProductosApiApplication",
