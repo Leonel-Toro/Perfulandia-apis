@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 10-06-2025 a las 05:15:32
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Host: 127.0.0.1:3306
+-- Generation Time: Jun 30, 2025 at 06:26 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,31 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `perfulandia`
+-- Database: `perfulandia`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `clientes`
+-- Table structure for table `categoria`
+--
+
+CREATE TABLE `categoria` (
+  `id` bigint(20) NOT NULL,
+  `nombre_categoria` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `categoria`
+--
+
+INSERT INTO `categoria` (`id`, `nombre_categoria`) VALUES
+(1, 'Perfumes exoticos');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `clientes`
 --
 
 CREATE TABLE `clientes` (
@@ -38,7 +56,7 @@ CREATE TABLE `clientes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
--- Volcado de datos para la tabla `clientes`
+-- Dumping data for table `clientes`
 --
 
 INSERT INTO `clientes` (`id`, `usuario_id`, `rut`, `telefono`, `direccion`, `apellido`, `nombre`) VALUES
@@ -49,7 +67,7 @@ INSERT INTO `clientes` (`id`, `usuario_id`, `rut`, `telefono`, `direccion`, `ape
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cupones`
+-- Table structure for table `cupones`
 --
 
 CREATE TABLE `cupones` (
@@ -62,21 +80,28 @@ CREATE TABLE `cupones` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `detalle_venta`
+-- Table structure for table `detalle_venta`
 --
 
 CREATE TABLE `detalle_venta` (
   `id` bigint(20) NOT NULL,
   `venta_id` bigint(20) DEFAULT NULL,
-  `producto_id` bigint(20) DEFAULT NULL,
   `cantidad` int(11) DEFAULT NULL,
-  `precio_unitario` decimal(10,2) DEFAULT NULL
+  `precio_unitario` decimal(38,2) DEFAULT NULL,
+  `id_producto` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+--
+-- Dumping data for table `detalle_venta`
+--
+
+INSERT INTO `detalle_venta` (`id`, `venta_id`, `cantidad`, `precio_unitario`, `id_producto`) VALUES
+(3, 7, 1, 105000.00, 5);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `envios`
+-- Table structure for table `envios`
 --
 
 CREATE TABLE `envios` (
@@ -90,35 +115,49 @@ CREATE TABLE `envios` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `inventario`
+-- Table structure for table `inventario`
 --
 
 CREATE TABLE `inventario` (
   `id` bigint(20) NOT NULL,
   `producto_id` bigint(20) DEFAULT NULL,
   `cantidad` int(11) DEFAULT NULL,
-  `ubicacion` varchar(100) DEFAULT NULL
+  `ubicacion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+--
+-- Dumping data for table `inventario`
+--
+
+INSERT INTO `inventario` (`id`, `producto_id`, `cantidad`, `ubicacion`) VALUES
+(3, 5, 5, 'SEDE MAIPU');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `productos`
+-- Table structure for table `productos`
 --
 
 CREATE TABLE `productos` (
   `id` bigint(20) NOT NULL,
-  `nombre` varchar(100) DEFAULT NULL,
-  `descripcion` text DEFAULT NULL,
-  `precio` decimal(10,2) DEFAULT NULL,
-  `categoria` varchar(50) DEFAULT NULL,
-  `marca` varchar(50) DEFAULT NULL
+  `precio` decimal(38,2) DEFAULT NULL,
+  `marca` varchar(255) DEFAULT NULL,
+  `descripcion_producto` varchar(255) DEFAULT NULL,
+  `nombre_producto` varchar(255) DEFAULT NULL,
+  `categoria_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+--
+-- Dumping data for table `productos`
+--
+
+INSERT INTO `productos` (`id`, `precio`, `marca`, `descripcion_producto`, `nombre_producto`, `categoria_id`) VALUES
+(5, 105000.00, 'Antonio banderin', 'pectacular perfume hecho a base de giovannis', 'AQUA DE GIOVANNI', 1);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `roles`
+-- Table structure for table `roles`
 --
 
 CREATE TABLE `roles` (
@@ -127,7 +166,7 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
--- Volcado de datos para la tabla `roles`
+-- Dumping data for table `roles`
 --
 
 INSERT INTO `roles` (`id`, `rol`) VALUES
@@ -138,7 +177,7 @@ INSERT INTO `roles` (`id`, `rol`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tickets_soporte`
+-- Table structure for table `tickets_soporte`
 --
 
 CREATE TABLE `tickets_soporte` (
@@ -153,7 +192,7 @@ CREATE TABLE `tickets_soporte` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Table structure for table `usuarios`
 --
 
 CREATE TABLE `usuarios` (
@@ -164,18 +203,20 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
--- Volcado de datos para la tabla `usuarios`
+-- Dumping data for table `usuarios`
 --
 
 INSERT INTO `usuarios` (`id`, `password`, `enabled`, `correo`) VALUES
 (3, '12345678', 1, 'leo@outlook.com'),
 (4, '$2a$10$8t2jajQ1rL1slFr6ab/ShOW1TQz3Yi/VDqXcsvqpHInftZ.aJLPuC', 1, 'leo2@outlook.com'),
-(5, '$2a$10$WnbV0wFFYYyPJk0YKRWNQuhSttdKr6/PPCz7ng59PTqtraaYPg1qq', 1, 'leo3@outlook.com');
+(5, '$2a$10$WnbV0wFFYYyPJk0YKRWNQuhSttdKr6/PPCz7ng59PTqtraaYPg1qq', 1, 'leo3@outlook.com'),
+(6, '$2a$10$EyxnLFWC3ceOjP7go4eFqOB9Y9NyWBW/j.CHevJwBqSZNu1rAj.P.', 1, 'vendedor@estrella.com'),
+(7, '$2a$10$TSyYQExfApM/f.U.KA72O.qr1cVJr5Xf5BPCi3RIRChL97189cdGW', 1, 'admin@duoc.com');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios_roles`
+-- Table structure for table `usuarios_roles`
 --
 
 CREATE TABLE `usuarios_roles` (
@@ -184,18 +225,20 @@ CREATE TABLE `usuarios_roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `usuarios_roles`
+-- Dumping data for table `usuarios_roles`
 --
 
 INSERT INTO `usuarios_roles` (`id_usuario`, `id_rol`) VALUES
 (3, 1),
 (4, 1),
-(5, 1);
+(5, 1),
+(6, 2),
+(7, 3);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `vendedores`
+-- Table structure for table `vendedores`
 --
 
 CREATE TABLE `vendedores` (
@@ -206,116 +249,126 @@ CREATE TABLE `vendedores` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
--- Volcado de datos para la tabla `vendedores`
+-- Dumping data for table `vendedores`
 --
 
 INSERT INTO `vendedores` (`id`, `usuario_id`, `sucursal`, `meta_mensual`) VALUES
-(1, NULL, 'Santiago', 150000.00);
+(1, NULL, 'Santiago', 150000.00),
+(2, NULL, 'Santiago', 150000.00);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ventas`
+-- Table structure for table `ventas`
 --
 
 CREATE TABLE `ventas` (
   `id` bigint(20) NOT NULL,
   `cliente_id` bigint(20) DEFAULT NULL,
   `vendedor_id` bigint(20) DEFAULT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `fecha` date DEFAULT NULL,
   `total` decimal(38,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
--- Volcado de datos para la tabla `ventas`
+-- Dumping data for table `ventas`
 --
 
 INSERT INTO `ventas` (`id`, `cliente_id`, `vendedor_id`, `fecha`, `total`) VALUES
-(3, 1, 1, '2025-05-26 00:00:00', 14990.00),
-(4, 1, 1, '2025-05-26 00:00:00', 14990.00);
+(3, 1, 1, '2025-05-25', 14990.00),
+(4, 1, 1, '2025-05-25', 14990.00),
+(5, 15, 2, '2025-05-25', NULL),
+(6, 15, 2, '2025-05-25', NULL),
+(7, 15, 2, '2025-05-25', NULL);
 
 --
--- Índices para tablas volcadas
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `clientes`
+-- Indexes for table `categoria`
+--
+ALTER TABLE `categoria`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `clientes`
 --
 ALTER TABLE `clientes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `usuario_id` (`usuario_id`);
 
 --
--- Indices de la tabla `cupones`
+-- Indexes for table `cupones`
 --
 ALTER TABLE `cupones`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `detalle_venta`
+-- Indexes for table `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `venta_id` (`venta_id`),
-  ADD KEY `producto_id` (`producto_id`);
+  ADD KEY `venta_id` (`venta_id`);
 
 --
--- Indices de la tabla `envios`
+-- Indexes for table `envios`
 --
 ALTER TABLE `envios`
   ADD PRIMARY KEY (`id`),
   ADD KEY `venta_id` (`venta_id`);
 
 --
--- Indices de la tabla `inventario`
+-- Indexes for table `inventario`
 --
 ALTER TABLE `inventario`
   ADD PRIMARY KEY (`id`),
   ADD KEY `producto_id` (`producto_id`);
 
 --
--- Indices de la tabla `productos`
+-- Indexes for table `productos`
 --
 ALTER TABLE `productos`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FKpg3xiei77fmdbpx20n8i9txs6` (`categoria_id`);
 
 --
--- Indices de la tabla `roles`
+-- Indexes for table `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nombre` (`rol`);
 
 --
--- Indices de la tabla `tickets_soporte`
+-- Indexes for table `tickets_soporte`
 --
 ALTER TABLE `tickets_soporte`
   ADD PRIMARY KEY (`id`),
   ADD KEY `cliente_id` (`cliente_id`);
 
 --
--- Indices de la tabla `usuarios`
+-- Indexes for table `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UKcdmw5hxlfj78uf4997i3qyyw5` (`correo`);
 
 --
--- Indices de la tabla `usuarios_roles`
+-- Indexes for table `usuarios_roles`
 --
 ALTER TABLE `usuarios_roles`
   ADD PRIMARY KEY (`id_usuario`,`id_rol`),
   ADD KEY `id_rol` (`id_rol`);
 
 --
--- Indices de la tabla `vendedores`
+-- Indexes for table `vendedores`
 --
 ALTER TABLE `vendedores`
   ADD PRIMARY KEY (`id`),
   ADD KEY `usuario_id` (`usuario_id`);
 
 --
--- Indices de la tabla `ventas`
+-- Indexes for table `ventas`
 --
 ALTER TABLE `ventas`
   ADD PRIMARY KEY (`id`),
@@ -323,125 +376,136 @@ ALTER TABLE `ventas`
   ADD KEY `vendedor_id` (`vendedor_id`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `clientes`
+-- AUTO_INCREMENT for table `categoria`
+--
+ALTER TABLE `categoria`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT de la tabla `cupones`
+-- AUTO_INCREMENT for table `cupones`
 --
 ALTER TABLE `cupones`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `detalle_venta`
+-- AUTO_INCREMENT for table `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `envios`
+-- AUTO_INCREMENT for table `envios`
 --
 ALTER TABLE `envios`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `inventario`
+-- AUTO_INCREMENT for table `inventario`
 --
 ALTER TABLE `inventario`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `productos`
+-- AUTO_INCREMENT for table `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de la tabla `roles`
+-- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `tickets_soporte`
+-- AUTO_INCREMENT for table `tickets_soporte`
 --
 ALTER TABLE `tickets_soporte`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `usuarios`
+-- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT de la tabla `vendedores`
+-- AUTO_INCREMENT for table `vendedores`
 --
 ALTER TABLE `vendedores`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `ventas`
+-- AUTO_INCREMENT for table `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `clientes`
+-- Constraints for table `clientes`
 --
 ALTER TABLE `clientes`
   ADD CONSTRAINT `clientes_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`);
 
 --
--- Filtros para la tabla `detalle_venta`
+-- Constraints for table `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
   ADD CONSTRAINT `detalle_venta_ibfk_1` FOREIGN KEY (`venta_id`) REFERENCES `ventas` (`id`),
-  ADD CONSTRAINT `detalle_venta_ibfk_2` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`);
 
 --
--- Filtros para la tabla `envios`
+-- Constraints for table `envios`
 --
 ALTER TABLE `envios`
   ADD CONSTRAINT `envios_ibfk_1` FOREIGN KEY (`venta_id`) REFERENCES `ventas` (`id`);
 
 --
--- Filtros para la tabla `inventario`
+-- Constraints for table `inventario`
 --
 ALTER TABLE `inventario`
   ADD CONSTRAINT `inventario_ibfk_1` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`);
 
 --
--- Filtros para la tabla `tickets_soporte`
+-- Constraints for table `productos`
+--
+ALTER TABLE `productos`
+  ADD CONSTRAINT `FKpg3xiei77fmdbpx20n8i9txs6` FOREIGN KEY (`categoria_id`) REFERENCES `categoria` (`id`);
+
+--
+-- Constraints for table `tickets_soporte`
 --
 ALTER TABLE `tickets_soporte`
   ADD CONSTRAINT `tickets_soporte_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`);
 
 --
--- Filtros para la tabla `usuarios_roles`
+-- Constraints for table `usuarios_roles`
 --
 ALTER TABLE `usuarios_roles`
   ADD CONSTRAINT `usuarios_roles_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
   ADD CONSTRAINT `usuarios_roles_ibfk_2` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id`);
 
 --
--- Filtros para la tabla `vendedores`
+-- Constraints for table `vendedores`
 --
 ALTER TABLE `vendedores`
   ADD CONSTRAINT `vendedores_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`);
 
 --
--- Filtros para la tabla `ventas`
+-- Constraints for table `ventas`
 --
 ALTER TABLE `ventas`
   ADD CONSTRAINT `FKamk55tkgjpl3o7hjkhqgu4s6` FOREIGN KEY (`vendedor_id`) REFERENCES `vendedores` (`id`);

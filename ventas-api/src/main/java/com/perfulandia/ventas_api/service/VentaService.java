@@ -9,6 +9,7 @@ import com.perfulandia.ventas_api.models.DetalleVenta;
 import com.perfulandia.ventas_api.repository.DetalleVentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.perfulandia.ventas_api.models.Vendedor;
