@@ -1,30 +1,25 @@
 package com.usuarios_api.service;
 
+import java.util.List;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.usuarios_api.dto.RegistroUsuarioRequest;
 import com.usuarios_api.models.Rol;
 import com.usuarios_api.models.Usuario;
 import com.usuarios_api.repository.RolRepository;
 import com.usuarios_api.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    @Autowired
-    private RolRepository rolRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    public AuthService(UsuarioRepository usuarioRepository, RolRepository rolRepository) {
-        this.usuarioRepository = usuarioRepository;
-        this.rolRepository = rolRepository;
-    }
+    private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Usuario registrarUsuario(RegistroUsuarioRequest request) {
         if (usuarioRepository.findByCorreo(request.getCorreo()).isPresent()) {
@@ -44,20 +39,11 @@ public class AuthService {
         return usuario;
     }
 
-    public Usuario findByIdUsuario(Integer idUsuario){
-        Optional<Usuario> usuario = usuarioRepository.findById(idUsuario.longValue());
-        if(usuario.isPresent()){
-            Usuario usuarioEncontrado = usuario.get();
-            return usuarioEncontrado;
-        }
-        return null;
+    public Usuario findByIdUsuario(Integer idUsuario) {
+        return usuarioRepository.findById(idUsuario.longValue()).orElse(null);
     }
 
-    public List<Usuario> findUsuariosByRol(String tipoRol){
-        List<Usuario> listaUsuario = usuarioRepository.findByRolesRol(tipoRol);
-        if(listaUsuario!= null){
-            return listaUsuario;
-        }
-        return null;
+    public List<Usuario> findUsuariosByRol(String tipoRol) {
+        return usuarioRepository.findByRolesRol(tipoRol);
     }
 }
