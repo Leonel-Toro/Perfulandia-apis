@@ -73,7 +73,7 @@ public class ClienteService {
         cliente.setDireccion(request.getDireccion());
 
         // Crear usuario asociado
-        RegistroClienteDTO newUser = new RegistroClienteDTO();
+        RegistroUsuarioRequest newUser = new RegistroUsuarioRequest();
         newUser.setCorreo(request.getCorreo());
         newUser.setPassword(request.getPassword());
         newUser.setRol("CLIENTE");
