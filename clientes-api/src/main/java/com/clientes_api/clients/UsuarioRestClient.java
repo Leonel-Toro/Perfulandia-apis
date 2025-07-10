@@ -1,6 +1,6 @@
 package com.clientes_api.clients;
 
-import com.usuarios_api.dto.RegistroUsuarioRequest;
+import com.clientes_api.dto.RegistroClienteDTO;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
@@ -8,5 +8,5 @@ import org.springframework.web.service.annotation.PostExchange;
 @HttpExchange(url = "http://localhost:8081/")
 public interface UsuarioRestClient {
     @PostExchange
-    void registrarUsuario(@RequestBody RegistroUsuarioRequest request);
+    void registrarUsuario(@RequestBody RegistroClienteDTO request);
 }

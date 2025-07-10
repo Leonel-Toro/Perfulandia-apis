@@ -47,7 +47,7 @@ class SoporteControllerTest {
     assertNotNull(response.getBody());
     assertTrue(response.getBody() instanceof Ticket);
     assertEquals("Prueba de ticket", ((Ticket) response.getBody()).getAsunto());
-}
+    }
 
     @Test
     void testCreacionTicket_Error() {
