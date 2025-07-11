@@ -50,50 +50,61 @@ public class VentaController {
         return venta != null ? ResponseEntity.ok(venta) : ResponseEntity.notFound().build();
     }
 
-    // ✅ ✅ ✅ VERSIÓN HATEOAS SEPARADA
+
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/hateoas/")
     public ResponseEntity<CollectionModel<EntityModel<Venta>>> getVentasHateoas() {
-        List<Venta> ventas = ventaService.getVentas();
-        List<EntityModel<Venta>> ventasHateoas = ventas.stream()
-            .map(v -> EntityModel.of(
-                v,
-                linkTo(methodOn(VentaController.class).getVentaHateoas(v.getIdVenta())).withSelfRel()
+        List<EntityModel<Venta>> ventasHateoas = ventaService.getVentas().stream()
+            .map(venta -> EntityModel.of(
+                venta,
+                linkTo(methodOn(VentaController.class).getVentaHateoas(venta.getIdVenta())).withRel("venta-por-id")
             ))
             .collect(Collectors.toList());
 
         return ResponseEntity.ok(
             CollectionModel.of(
                 ventasHateoas,
-                linkTo(methodOn(VentaController.class).getVentasHateoas()).withSelfRel()
+                linkTo(methodOn(VentaController.class).getVentasHateoas()).withRel("lista-ventas")
             )
         );
     }
 
+
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
     @GetMapping("/hateoas/{id}")
-    public ResponseEntity<EntityModel<Venta>> getVentaHateoas(@PathVariable Long id) {
+    public ResponseEntity<?> getVentaHateoas(@PathVariable Long id) {
         Venta venta = ventaService.findById(id);
         if (venta == null) {
             return ResponseEntity.notFound().build();
         }
 
-        EntityModel<Venta> resource = EntityModel.of(
+        EntityModel<Venta> ventaModel = EntityModel.of(
             venta,
-            linkTo(methodOn(VentaController.class).getVentaHateoas(id)).withSelfRel(),
-            linkTo(methodOn(VentaController.class).getVentasHateoas()).withRel("all-ventas")
+            linkTo(methodOn(VentaController.class).getVentaHateoas(id)).withRel("venta-por-id"),
+            linkTo(methodOn(VentaController.class).getVentasHateoas()).withRel("lista-ventas"),
+            linkTo(methodOn(VentaController.class).nuevaVenta(null)).withRel("crear-venta")
         );
 
-        return ResponseEntity.ok(resource);
+        return ResponseEntity.ok(ventaModel);
     }
 
 
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
-    @PostMapping("/nueva")
+    @PostMapping("/hateoas")
     public ResponseEntity<?> nuevaVenta(@RequestBody NuevaVentaDTO nuevaVentaDTO) {
         try {
-            NuevaVentaDTO nuevaVenta = ventaService.procesarVenta(nuevaVentaDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(200, "Se ha realizado la venta con exito."));
+            Venta ventaCreada = ventaService.procesarVenta(nuevaVentaDTO).getVenta();
+
+            EntityModel<Venta> ventaModel = EntityModel.of(
+                ventaCreada,
+                linkTo(methodOn(VentaController.class).getVentaHateoas(ventaCreada.getIdVenta())).withRel("venta-por-id"),
+                linkTo(methodOn(VentaController.class).getVentasHateoas()).withRel("lista-ventas")
+            );
+
+            return ResponseEntity
+                .created(linkTo(methodOn(VentaController.class).getVentaHateoas(ventaCreada.getIdVenta())).toUri())
+                .body(ventaModel);
+
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ApiResponse(400, e.getMessage()));
         } catch (RuntimeException e) {
@@ -104,44 +115,43 @@ public class VentaController {
 
 
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
-    @GetMapping("/cliente/{idCliente}")
+    @GetMapping("/hateoas/cliente/{idCliente}")
     public ResponseEntity<CollectionModel<EntityModel<Venta>>> listaVentasByIdCliente(@PathVariable Long idCliente) {
-        List<Venta> ventas = ventaService.getVentasByIdCliente(idCliente);
-        List<EntityModel<Venta>> ventasHateoas = ventas.stream()
-            .map(v -> EntityModel.of(
-                v,
-                linkTo(methodOn(VentaController.class).getVentaHateoas(v.getIdVenta())).withSelfRel()
+        List<EntityModel<Venta>> ventasHateoas = ventaService.getVentasByIdCliente(idCliente).stream()
+            .map(venta -> EntityModel.of(
+                venta,
+                linkTo(methodOn(VentaController.class).getVentaHateoas(venta.getIdVenta())).withRel("venta-por-id")
             ))
             .collect(Collectors.toList());
 
         return ResponseEntity.ok(
             CollectionModel.of(
                 ventasHateoas,
-                linkTo(methodOn(VentaController.class).listaVentasByIdCliente(idCliente)).withSelfRel()
+                linkTo(methodOn(VentaController.class).listaVentasByIdCliente(idCliente)).withRel("ventas-por-cliente")
             )
         );
     }
 
+    // ✅ HATEOAS: Filtrar por Vendedor
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
-    @GetMapping("/vendedor/{idVendedor}")
+    @GetMapping("/hateoas/vendedor/{idVendedor}")
     public ResponseEntity<?> listarVentasByVendedor(@PathVariable Long idVendedor) {
         Vendedor vendedor = vendedorService.getById(idVendedor);
         if (vendedor == null) {
             return ResponseEntity.badRequest().body(new ApiResponse(400, "Vendedor no encontrado."));
         }
 
-        List<Venta> ventas = ventaService.getVentasByIdVendedor(vendedor);
-        List<EntityModel<Venta>> ventasHateoas = ventas.stream()
-            .map(v -> EntityModel.of(
-                v,
-                linkTo(methodOn(VentaController.class).getVentaHateoas(v.getIdVenta())).withSelfRel()
+        List<EntityModel<Venta>> ventasHateoas = ventaService.getVentasByIdVendedor(vendedor).stream()
+            .map(venta -> EntityModel.of(
+                venta,
+                linkTo(methodOn(VentaController.class).getVentaHateoas(venta.getIdVenta())).withRel("venta-por-id")
             ))
             .collect(Collectors.toList());
 
         return ResponseEntity.ok(
             CollectionModel.of(
                 ventasHateoas,
-                linkTo(methodOn(VentaController.class).listarVentasByVendedor(idVendedor)).withSelfRel()
+                linkTo(methodOn(VentaController.class).listarVentasByVendedor(idVendedor)).withRel("ventas-por-vendedor")
             )
         );
     }
