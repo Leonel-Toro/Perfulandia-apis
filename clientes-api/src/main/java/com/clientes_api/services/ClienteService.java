@@ -23,8 +23,8 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    public Cliente getById(Integer id) {
-        Optional<Cliente> cliente = clienteRepository.findById(id);
+    public Cliente getById(Integer idCliente) {
+        Optional<Cliente> cliente = clienteRepository.findById(idCliente);
         return cliente.orElse(null);
     }
 
@@ -134,5 +134,10 @@ public class ClienteService {
             return cliente.get();
         }
         return null;
+    }
+
+    public Cliente getById(Long idCliente) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getById'");
     }
 }

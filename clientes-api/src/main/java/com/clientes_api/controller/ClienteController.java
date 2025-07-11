@@ -76,7 +76,7 @@ public class ClienteController {
     Cliente cliente = clienteService.getById(idCliente);
 
     EntityModel<Cliente> clienteModel = EntityModel.of(cliente,
-        linkTo(methodOn(ClienteController.class).getClienteByIdHateoas(idCliente)).withSelfRel(),
+        linkTo(methodOn(ClienteController.class).getClienteByIdHateoas(idCliente)).withRel("BuscarPorId"),
         linkTo(methodOn(ClienteController.class).getAllHateoas()).withRel("todos-los-clientes"),
         linkTo(methodOn(ClienteController.class).actualizarClienteId(idCliente, null)).withRel("actualizar-cliente")
     );
@@ -93,7 +93,9 @@ public class ClienteController {
 
     for (Cliente cliente : clientes) {
         EntityModel<Cliente> model = EntityModel.of(cliente,
-            linkTo(methodOn(ClienteController.class).getClienteByIdHateoas(cliente.getId() != null ? cliente.getId().intValue() : null)).withSelfRel()
+            linkTo(methodOn(ClienteController.class).
+            getClienteByIdHateoas(cliente.getId() != null ? 
+            cliente.getId().intValue() : null)).withRel("buscar-cliente(" + cliente.getId() + ")")
         );
         clientesModel.add(model);
     }
