@@ -101,7 +101,7 @@ public class ClienteController {
     }
 
     CollectionModel<EntityModel<Cliente>> collectionModel = CollectionModel.of(clientesModel,
-        linkTo(methodOn(ClienteController.class).getAllHateoas()).withSelfRel()
+        linkTo(methodOn(ClienteController.class).getAllHateoas()).withRel("todos-los-clientes")
     );
 
     return ResponseEntity.ok(collectionModel);

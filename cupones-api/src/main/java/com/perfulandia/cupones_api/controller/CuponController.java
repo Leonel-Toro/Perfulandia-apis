@@ -68,7 +68,6 @@
         Cupon cupon = cuponServices.getById(id);
 
         EntityModel<Cupon> cuponModel = EntityModel.of(cupon,
-            linkTo(methodOn(CuponController.class).getByIdHateoas(id)).withSelfRel(),
             linkTo(methodOn(CuponController.class).getAllHateoas()).withRel("todos-los-cupones"),
             linkTo(methodOn(CuponController.class).updateHateoas(id, null)).withRel("actualizar"),
             linkTo(methodOn(CuponController.class).delete(id)).withRel("eliminar")
@@ -81,12 +80,15 @@
         public ResponseEntity<CollectionModel<EntityModel<Cupon>>> getAllHateoas() {
         List<EntityModel<Cupon>> cuponesModel = cuponServices.getAll().stream()
             .map(cupon -> EntityModel.of(cupon,
-                linkTo(methodOn(CuponController.class).getByIdHateoas(cupon.getId())).withSelfRel()
+                linkTo(methodOn(CuponController.class).getByIdHateoas(cupon.getId())).withRel("cupon-por-id"),
+                linkTo(methodOn(CuponController.class).getAllHateoas()).withRel("todos-los-cupones"),
+                linkTo(methodOn(CuponController.class).updateHateoas(cupon.getId(), null)).withRel("actualizar"),
+                linkTo(methodOn(CuponController.class).delete(cupon.getId())).withRel("eliminar")
             ))
             .collect(Collectors.toList());
 
         CollectionModel<EntityModel<Cupon>> collectionModel = CollectionModel.of(cuponesModel,
-            linkTo(methodOn(CuponController.class).getAllHateoas()).withSelfRel()
+            linkTo(methodOn(CuponController.class).getAllHateoas()).withRel("todos-los-cupones")
         );
 
         return ResponseEntity.ok(collectionModel);
@@ -97,7 +99,7 @@
         Cupon nuevo = cuponServices.save(cupon);
 
         EntityModel<Cupon> cuponModel = EntityModel.of(nuevo,
-            linkTo(methodOn(CuponController.class).getByIdHateoas(nuevo.getId())).withSelfRel(),
+            linkTo(methodOn(CuponController.class).getByIdHateoas(nuevo.getId())).withRel("cupon-por-id"),
             linkTo(methodOn(CuponController.class).getAllHateoas()).withRel("todos-los-cupones")
         );
 
@@ -111,7 +113,7 @@
         Cupon actualizado = cuponServices.update(id, cupon);
 
         EntityModel<Cupon> cuponModel = EntityModel.of(actualizado,
-            linkTo(methodOn(CuponController.class).getByIdHateoas(id)).withSelfRel(),
+            linkTo(methodOn(CuponController.class).getByIdHateoas(id)).withRel("cupon-por-id"),
             linkTo(methodOn(CuponController.class).getAllHateoas()).withRel("todos-los-cupones")
         );
 
