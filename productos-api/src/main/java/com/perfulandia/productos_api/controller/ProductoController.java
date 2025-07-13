@@ -65,13 +65,13 @@ public class ProductoController {
     public ResponseEntity<CollectionModel<EntityModel<Producto>>> listaProductosHateoas() {
         List<EntityModel<Producto>> productos = productoService.verProductos().stream()
         .map(prod -> (EntityModel<Producto>) EntityModel.of(prod,
-            linkTo(methodOn(ProductoController.class).verProducto(prod.getId())).withRel("ver-detalle"),
-            linkTo(methodOn(ProductoController.class).productosPorNombreCategoria(prod.getCategoria().getId())).withRel("productos-misma-categoria")
+            linkTo(methodOn(ProductoController.class).verProducto(prod.getId())).withRel("producto-por-id"),
+            linkTo(methodOn(ProductoController.class).productosPorNombreCategoria(prod.getCategoria().getId())).withRel("productos-de-la-misma-categoria")
         ))
         .collect(Collectors.toList());
 
     return ResponseEntity.ok(CollectionModel.of(productos,
-        linkTo(methodOn(ProductoController.class).listaProductosHateoas()).withSelfRel()
+        linkTo(methodOn(ProductoController.class).listaProductosHateoas()).withRel("lista-productos")
     ));
 }
 
@@ -83,7 +83,7 @@ public class ProductoController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
     EntityModel<Producto> model = EntityModel.of(producto,
-        linkTo(methodOn(ProductoController.class).verProductoHateoas(idProducto)).withSelfRel(),
+        linkTo(methodOn(ProductoController.class).verProductoHateoas(idProducto)).withRel("producto-por-id"),
         linkTo(methodOn(ProductoController.class).listaProductosHateoas()).withRel("lista-productos")
     );
 

@@ -73,7 +73,7 @@ public class InventarioController {
         .collect(Collectors.toList());
 
     return ResponseEntity.ok(CollectionModel.of(inventarios,
-        linkTo(methodOn(InventarioController.class).listaInventarioHateoas()).withSelfRel()
+        linkTo(methodOn(InventarioController.class).listaInventarioHateoas()).withRel("lista-inventario")
     ));
     }   
 

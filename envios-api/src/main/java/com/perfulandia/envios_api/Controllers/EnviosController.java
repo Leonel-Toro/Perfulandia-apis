@@ -96,7 +96,7 @@ public class EnviosController {
         }
 
         EntityModel<Envios> model = EntityModel.of(envio,
-            linkTo(methodOn(EnviosController.class).getByIdHateoas(id)).withSelfRel(),
+            linkTo(methodOn(EnviosController.class).getByIdHateoas(id)).withRel("envios-por-id"),
             linkTo(methodOn(EnviosController.class).getAllHateoas()).withRel("todos-los-envios"),
             linkTo(methodOn(EnviosController.class).updateHateoas(id, null)).withRel("actualizar"),
             linkTo(methodOn(EnviosController.class).deleteHateoas(id)).withRel("eliminar")
@@ -109,12 +109,12 @@ public class EnviosController {
     public ResponseEntity<CollectionModel<EntityModel<Envios>>> getAllHateoas() {
         List<EntityModel<Envios>> envios = enviosService.getAll().stream()
             .map(envio -> EntityModel.of(envio,
-                linkTo(methodOn(EnviosController.class).getByIdHateoas(envio.getId())).withSelfRel()
+                linkTo(methodOn(EnviosController.class).getByIdHateoas(envio.getId())).withRel("envios-por-id")
             ))
             .collect(Collectors.toList());
 
         CollectionModel<EntityModel<Envios>> collection = CollectionModel.of(envios,
-            linkTo(methodOn(EnviosController.class).getAllHateoas()).withSelfRel()
+            linkTo(methodOn(EnviosController.class).getAllHateoas()).withRel("todos-los-envios")
         );
 
         return ResponseEntity.ok(collection);
@@ -125,7 +125,7 @@ public class EnviosController {
         Envios nuevo = enviosService.add(envio);
 
         EntityModel<Envios> model = EntityModel.of(nuevo,
-            linkTo(methodOn(EnviosController.class).getByIdHateoas(nuevo.getId())).withSelfRel(),
+            linkTo(methodOn(EnviosController.class).getByIdHateoas(nuevo.getId())).withRel("envios-por-id"),
             linkTo(methodOn(EnviosController.class).getAllHateoas()).withRel("todos-los-envios")
         );
 
@@ -142,7 +142,7 @@ public class EnviosController {
         }
 
         EntityModel<Envios> model = EntityModel.of(actualizado,
-            linkTo(methodOn(EnviosController.class).getByIdHateoas(id)).withSelfRel(),
+            linkTo(methodOn(EnviosController.class).getByIdHateoas(id)).withRel("envios-por-id"),
             linkTo(methodOn(EnviosController.class).getAllHateoas()).withRel("todos-los-envios")
         );
 
@@ -170,7 +170,7 @@ public class EnviosController {
             Envios nuevo = enviosService.crearEnvioConCliente(idCliente, envio);
 
             EntityModel<Envios> model = EntityModel.of(nuevo,
-                linkTo(methodOn(EnviosController.class).getByIdHateoas(nuevo.getId())).withSelfRel(),
+                linkTo(methodOn(EnviosController.class).getByIdHateoas(nuevo.getId())).withRel("envios-por-id"),
                 linkTo(methodOn(EnviosController.class).getAllHateoas()).withRel("todos-los-envios")
             );
 
