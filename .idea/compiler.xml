@@ -29,8 +29,8 @@
         </processorPath>
         <module name="ventas-api" />
         <module name="productos-api" />
-        <module name="cupones-api" />
         <module name="usuarios-api" />
+        <module name="cupones-api" />
       </profile>
     </annotationProcessing>
   </component>

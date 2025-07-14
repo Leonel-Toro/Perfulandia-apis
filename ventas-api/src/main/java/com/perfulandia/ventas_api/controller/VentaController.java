@@ -90,7 +90,7 @@ public class VentaController {
 
 
     @PreAuthorize("hasAnyRole('ADMIN','VENDEDOR')")
-    @PostMapping("/hateoas")
+    @PostMapping("/hateoas/nueva")
     public ResponseEntity<?> nuevaVenta(@RequestBody NuevaVentaDTO nuevaVentaDTO) {
         try {
             Venta ventaCreada = ventaService.procesarVenta(nuevaVentaDTO).getVenta();

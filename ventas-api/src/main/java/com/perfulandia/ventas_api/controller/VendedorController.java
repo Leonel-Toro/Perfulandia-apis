@@ -85,8 +85,7 @@ public class VendedorController {
         return ResponseEntity.ok(resource);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/hateoas/nuevo")
+    @PostMapping("/nuevo")
     public ResponseEntity<?> nuevoVendedorHateoas(@RequestBody RegistroVendedorDTO request, HttpServletRequest httpRequest) {
         List<String> errores = new ArrayList<>();
         if (request.getSucursal() == null || request.getSucursal().equals("")) {
